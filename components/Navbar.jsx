@@ -12,6 +12,7 @@ function Navbar() {
   useEffect(() => {
     setuser(user);
   }, [user]);
+
   const memo = useMemo(() => {
     return (
       <>
@@ -56,7 +57,7 @@ function Navbar() {
   }, [us]);
   return (
     <div className="sticky top-0 z-50">
-      <ul className="flex justify-between items-center m-2 p-3 dark:bg-slate-700 bg-slate-300 dark:text-amber-100 rounded-md">
+      <ul className="flex justify-between items-center m-2 p-3 dark:bg-slate-700 bg-slate-300 dark:text-amber-100 rounded-md text-sm md:text-lg">
         {memo}
       </ul>
     </div>

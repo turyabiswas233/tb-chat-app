@@ -1,8 +1,19 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
+import { auth } from "../fbConf";
 import "../styles/global.css";
 
 function MyApp({ Component, pageProps }) {
+  const user = auth.currentUser;
+  const [us, setus] = useState();
+  const router = useRouter();
+  useState(() => {
+    if (user) {
+      router.push("/chat");
+    }
+  }, [us]);
   return (
     <div className="h-screen">
       <Head>

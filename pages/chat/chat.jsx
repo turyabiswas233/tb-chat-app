@@ -10,32 +10,33 @@ function Chat() {
   const router = useRouter();
   const { id } = router.query;
   const [msgs, setmsgs] = useState([]);
-  const [text, settxt] = useState();
+  const [text, settxt] = useState("");
   const [render, setrender] = useState(true);
   const bottomChat = useRef();
 
+  async function getDb() {
+    const ref = collection(db, `groups/${id}/messages`);
+    const data = await getDocs(ref);
+    setmsgs(
+      data?.docs
+        ?.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+        .sort((a, b) => {
+          if (a.time < b.time) return -1;
+        })
+    );
+  }
+
   useEffect(() => {
-    async function getDb() {
-      const ref = collection(db, `groups/${id}/messages`);
-      const data = await getDocs(ref);
-      setmsgs(
-        data.docs
-          .map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          .sort((a, b) => {
-            if (a.time < b.time) return -1;
-          })
-      );
-    }
     getDb().then(() => {
       setrender(false);
     });
   }, [render]);
 
   const memo = useMemo(() => {
-    if (msgs.length == 0)
+    if (msgs?.length == 0)
       return (
         <div
           className="relative h-full flex

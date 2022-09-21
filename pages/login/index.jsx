@@ -2,15 +2,16 @@ import { auth, db } from "../../fbConf";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 function Login() {
   const provider = new GoogleAuthProvider();
   const router = useRouter();
+  const user = auth.currentUser;
+  const [us, setus] = useState();
   function handleLogin() {
     signInWithPopup(auth, provider)
       .then((us) => {
         const user = us?.user;
-
         setDoc(doc(db, "users", user?.uid), {
           email: user?.email,
           name: user?.displayName,
@@ -31,7 +32,13 @@ function Login() {
         console.log(errorCode, errorMessage);
       });
   }
-  if (!auth.currentUser)
+  
+  useEffect(() => {
+    if (user) {
+      setus(user);
+    }
+  }, []);
+  if (!us)
     return (
       <div
         className="h-screen w-full py-10 md:px-20 
@@ -67,6 +74,9 @@ function Login() {
         </form>
       </div>
     );
+  else if (us) {
+    router.push("/chat");
+  }
 }
 
 export default Login;
