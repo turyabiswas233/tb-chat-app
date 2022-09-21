@@ -1,15 +1,18 @@
+// import modules & components
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import Message from "../../components/Message";
 import { auth, db } from "../../fbConf";
-
+// main function
 function Chat() {
   const user = auth.currentUser;
   const router = useRouter();
   const { id } = router.query;
   const [msgs, setmsgs] = useState([]);
   const [text, settxt] = useState();
+  const [render, setrender] = useState(true);
+  const bottomChat = useRef();
 
   useEffect(() => {
     async function getDb() {
@@ -26,11 +29,24 @@ function Chat() {
           })
       );
     }
-    console.log("called");
-    getDb();
-  }, [user || text == ""]);
+    getDb().then(() => {
+      setrender(false);
+    });
+  }, [render]);
 
   const memo = useMemo(() => {
+    if (msgs.length == 0)
+      return (
+        <div
+          className="relative h-full flex
+        justify-center items-center
+        "
+        >
+          <p className="md:text-2xl text-lg w-2/3 capitalize text-center text-zinc-700 break-words">
+            No conversation has been started to this group
+          </p>
+        </div>
+      );
     return msgs?.map((doc) => {
       return (
         <Message
@@ -45,12 +61,22 @@ function Chat() {
     });
   }, [msgs]);
 
-  // add new message to database
+  // ref to chat bottom
+  useEffect(() => {
+    setTimeout(
+      bottomChat.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      }),
+      100
+    );
+  }, [msgs]);
 
+  // add new message to database
   async function sendMsg(txt) {
     const date = new Date();
     const data = {
-      text: text,
+      text: txt,
       senderMail: user?.email,
       date: `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`,
       time: date?.getTime(),
@@ -67,6 +93,7 @@ function Chat() {
         e.preventDefault();
         sendMsg(text).then(() => {
           settxt("");
+          setrender(true);
         });
       }}
       className="grid relative col-span-3  grid-rows-6 overflow-hidden ml-3 "
@@ -74,12 +101,13 @@ function Chat() {
       <div className="overflow-y-auto p-2 flex flex-col row-span-5 chatbox text-white">
         {/* messege section */}
         {memo}
+        <div ref={bottomChat}></div>
       </div>
       <div className="grid py-3 items-center grid-cols-3 w-full ">
         {/* message sent btn section */}
         <input
           className="col-span-2 mx-2 rounded-md resize-none outline-none border-none dark:bg-zinc-900 bg-zinc-400
-          dark:text-zinc-100 text-lg
+          dark:text-zinc-100 md:text-lg
              px-2 h-full overflow-hidden 
              placeholder:text-zinc-700 
             "
@@ -95,7 +123,7 @@ function Chat() {
         <button
           type="submit"
           className="bg-stone-900 px-3 h-full py-2 rounded-lg mx-2 hover:bg-white text-white hover:text-stone-900 font-bold transition-all border-stone-900 border-4
-          uppercase text-xl tracking-wider"
+          uppercase text-sm md:text-xl tracking-wider"
         >
           send
         </button>

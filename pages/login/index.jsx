@@ -8,19 +8,20 @@ function Login() {
   const router = useRouter();
   function handleLogin() {
     signInWithPopup(auth, provider)
-      .then(() => {
-        const user = auth?.currentUser;
-        try {
-          setDoc(doc(db, "users", user?.uid), {
-            email: user?.email,
-            name: user?.displayName,
-            image: user?.photoURL,
-          }).then(() => {
+      .then((us) => {
+        const user = us?.user;
+
+        setDoc(doc(db, "users", user?.uid), {
+          email: user?.email,
+          name: user?.displayName,
+          image: user?.photoURL,
+        })
+          .then(() => {
             router.push("/chat/");
+          })
+          .catch((err) => {
+            console.log(err?.message);
           });
-        } catch (err) {
-          router.push("/");
-        }
       })
       .catch((error) => {
         // Handle Errors here.

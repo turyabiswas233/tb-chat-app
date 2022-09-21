@@ -23,7 +23,7 @@ function Sidbar() {
     } catch (error) {
       console.log(error);
     }
-  }, [user]);
+  }, []);
   const memo = useMemo(() => {
     return chatlist?.map((ele) => {
       if (ele?.email != user?.email)

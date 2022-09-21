@@ -8,15 +8,17 @@ function Navbar() {
   const user = auth.currentUser;
   const [us, setuser] = useState();
   const rout = useRouter();
+  const { id } = rout.query;
   useEffect(() => {
     setuser(user);
   }, [user]);
   const memo = useMemo(() => {
     return (
       <>
-        <li className="font-bold flex justify-center gap-2 items-center">
-          {us ? <Link href={"/chat"}>Private Message</Link> : "Private Message"}
+        <li className="font-bold flex bg-gray-600  p-2 rounded-full justify-center gap-2 items-center">
+          {id ? <Link href={"/chat"}>{"<"}</Link> : "Private Message"}
         </li>
+
         {us ? (
           <li className="font-bold flex gap-3 justify-center items-center">
             {us?.photoURL && (
