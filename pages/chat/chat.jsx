@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import Message from "../../components/Message";
 import { auth, db } from "../../fbConf";
 // main function
-function Chat() {
+function Chat({ grpInfo, allow }) {
   const user = auth.currentUser;
   const router = useRouter();
   const { id } = router.query;
@@ -14,7 +14,10 @@ function Chat() {
   const [render, setrender] = useState(true);
   const bottomChat = useRef();
 
-  async function getDb() {
+  {
+    /*get messages from DB */
+  }
+  async function getMessages() {
     const ref = collection(db, `groups/${id}/messages`);
     const data = await getDocs(ref);
     setmsgs(
@@ -28,14 +31,14 @@ function Chat() {
         })
     );
   }
-
+  //call function to get MSG
   useEffect(() => {
-    getDb().then(() => {
+    getMessages().then(() => {
       setrender(false);
     });
-  }, [render]);
+  }, [id, render]);
 
-  const memo = useMemo(() => {
+  const memoMsg = useMemo(() => {
     if (msgs?.length == 0)
       return (
         <div
@@ -65,9 +68,10 @@ function Chat() {
   // ref to chat bottom
   useEffect(() => {
     setTimeout(
-      bottomChat.current.scrollIntoView({
+      bottomChat?.current?.scrollIntoView({
         behavior: "smooth",
-        block: "start",
+        block: "nearest",
+        inline: "nearest",
       }),
       100
     );
@@ -88,48 +92,91 @@ function Chat() {
       alert(err.message);
     });
   }
+
+  //main body
+
+  let allowedMail = "";
+
+  allow?.filter((e) => {
+    return e.email == user?.email;
+  });
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        sendMsg(text).then(() => {
-          settxt("");
-          setrender(true);
-        });
-      }}
-      className="grid relative col-span-3  grid-rows-6 overflow-hidden ml-3 "
-    >
-      <div className="overflow-y-auto p-2 flex flex-col row-span-5 chatbox text-white">
-        {/* messege section */}
-        {memo}
-        <div ref={bottomChat}></div>
-      </div>
-      <div className="grid py-3 items-center grid-cols-3 w-full ">
-        {/* message sent btn section */}
-        <input
-          className="col-span-2 mx-2 rounded-md resize-none outline-none border-none dark:bg-zinc-900 bg-zinc-400
-          dark:text-zinc-100 md:text-lg
-             px-2 h-full overflow-hidden 
+    <>
+      <div className="w-full h-full relative flex flex-col">
+        {
+          <div className="bg-[#3333] p-2 w-full h-fit rounded-md">
+            <p className="text-lg md:text-2xl text-cyan-700 font-extrabold font-sans uppercase mx-auto w-fit">
+              {grpInfo?.grpname ? grpInfo?.grpname : "Your Group"}
+            </p>
+            <p className="text-sm capitalize">
+              Admin:
+              <span className="dark:text-blue-600 text-blue-900 mx-2">
+                {grpInfo?.adminName ? grpInfo?.adminName : ""}
+              </span>
+            </p>
+          </div>
+        }
+        <form
+          className="flex flex-col justify-between overflow-hidden h-full w-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            sendMsg(text).then(() => {
+              settxt("");
+              setrender(true);
+            });
+          }}
+        >
+          {/* first part msgs */}
+          <div className="overflow-y-auto p-2 flex flex-col chatbox">
+            {/* messege section */}
+            {memoMsg}
+            <div ref={bottomChat}></div>
+          </div>
+          {/* second pard msg tool */}
+          {grpInfo?.admin == user?.email ? (
+            <div className="flex items-center justify-between w-full h-[50px] text-sm mb-1">
+              {/* message sent btn section */}
+              <input
+                className="w-full min-w-xs mx-2 rounded-md resize-none outline-none border-none dark:bg-zinc-900 bg-zinc-400
+          dark:text-zinc-100 px-2 h-full overflow-hidden 
              placeholder:text-zinc-700 
             "
-          type="text"
-          required
-          placeholder="type a message"
-          onChange={(e) => {
-            settxt(e.target.value);
-          }}
-          value={text}
-        />
+                type="text"
+                required
+                placeholder="type a message"
+                onChange={(e) => {
+                  settxt(e.target.value);
+                }}
+                value={text}
+              />
 
-        <button
-          type="submit"
-          className="bg-stone-900 px-3 h-full py-2 rounded-lg mx-2 hover:bg-white text-white hover:text-stone-900 font-bold transition-all border-stone-900 border-4
-          uppercase text-sm md:text-xl tracking-wider"
-        >
-          send
-        </button>
+              <button
+                type="submit"
+                className="bg-stone-900 px-3 h-full py-2 rounded-lg mx-2 hover:bg-white text-white hover:text-stone-900 font-bold transition-all border-stone-900 border-4
+          uppercase tracking-wider"
+              >
+                send
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center justify-between w-full h-[50px] text-sm mb-1">
+                {/* message sent btn section */}
+                <p
+                  className="w-2/3 rounded-md resize-none outline-none border-none dark:bg-zinc-900 bg-zinc-400
+          dark:text-zinc-100 px-2 h-full overflow-hidden 
+             placeholder:text-zinc-700 mx-auto text-xs text-center flex items-center justify-center
+            "
+                >
+                  Only Admin of this group can send message. Remember, this
+                  group can be seen by public.
+                </p>
+              </div>
+            </>
+          )}
+        </form>
       </div>
-    </form>
+    </>
   );
 }
 

@@ -3,7 +3,10 @@ import Sidbar from "../../components/Sidbar";
 function index() {
   const router = useRouter();
   return (
-    <div className="grid grid-cols-4 p-3 h-5/6 overflow-hidden">
+    <div
+      className="flex gap-2 p-2 overflow-hidden
+    relative w-full h-full bottom-2"
+    >
       <Sidbar />
 
       <div className="flex justify-center items-center w-full h-full col-span-3">

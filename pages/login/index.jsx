@@ -32,7 +32,7 @@ function Login() {
         console.log(errorCode, errorMessage);
       });
   }
-  
+
   useEffect(() => {
     if (user) {
       setus(user);
@@ -42,7 +42,7 @@ function Login() {
     return (
       <div
         className="h-screen w-full py-10 md:px-20 
-      grid md:grid-cols-2 md:gap-5 relative justify-center items-center dark:text-amber-100
+      grid md:grid-cols-2 md:gap-5 relative justify-center items-center dark:text-gray-100
     "
       >
         <section className="h-fit text-center ">
@@ -51,7 +51,11 @@ function Login() {
           </h3>
         </section>
 
-        <span className="w-[1pt] absolute h-1/2 top-1/4 left-1/2 md:block hidden bg-black"></span>
+        {/* divider */}
+        <span
+          className="w-[3pt] h-1/2 p-1 absolute top-1/4 left-1/2 md:block hidden light:bg-black bg-amber-100 rounded-[100%]
+        "
+        ></span>
         <form
           onSubmit={(e) => {
             e.preventDefault();

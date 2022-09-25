@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }) {
     }
   }, [us]);
   return (
-    <div className="h-screen">
+    <div className="h-screen relative flex flex-col gap-2">
       <Head>
         <title>TB Chat App</title>
       </Head>

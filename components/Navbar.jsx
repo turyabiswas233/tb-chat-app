@@ -16,8 +16,8 @@ function Navbar() {
   const memo = useMemo(() => {
     return (
       <>
-        <li className="font-bold flex bg-gray-600  p-2 rounded-full justify-center gap-2 items-center">
-          {id ? <Link href={"/chat"}>{"<"}</Link> : "Private Message"}
+        <li className="font-bold flex dark:bg-gray-600 bg-gray-400 p-1 md:p-2 rounded-full justify-center items-center w-fit">
+          {id ? <Link href={"/chat"}>Private Message</Link> : "Private Message"}
         </li>
 
         {us ? (
@@ -25,9 +25,9 @@ function Navbar() {
             {us?.photoURL && (
               <Image
                 src={us?.photoURL}
-                className="rounded-full"
-                height={50}
-                width={50}
+                className="rounded-full "
+                height={25}
+                width={25}
                 alt={""}
               />
             )}{" "}
@@ -57,7 +57,13 @@ function Navbar() {
   }, [us]);
   return (
     <div className="sticky top-0 z-50">
-      <ul className="flex justify-between items-center m-2 p-3 dark:bg-slate-700 bg-slate-300 dark:text-amber-100 rounded-md text-sm md:text-lg">
+      <ul
+        className="flex justify-between items-center m-2 p-3
+       dark:bg-slate-700 bg-slate-300 dark:text-amber-100 
+       rounded-md text-[10px] md:text-lg gap-3
+       text-center
+       "
+      >
         {memo}
       </ul>
     </div>

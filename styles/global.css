@@ -20,22 +20,54 @@ html {
 
 }
 
+.grp_name {
+    z-index: 10;
+}
+
+.grp_name {
+    left: 0%
+}
+
+.grp_list:hover>.grp_name {
+    width: 85%;
+    left: 7.5%
+}
+
+@media screen and (max-width:768px) {
+    .grp_list:hover .grp_name {
+        width: 82%;
+        left: 9%;
+    }
+
+    .grp_list:hover p {
+        transform: scale(0.85);
+    }
+}
+
+
 @media (prefers-color-scheme: dark) {
     body {
         background: #222;
         color: #eaeaea;
     }
+
 }
 
-.chatbox::-webkit-scrollbar{
+.chatbox::-webkit-scrollbar {
     width: 4px;
     background: #0003;
 }
-.chatbox::-webkit-scrollbar-thumb{
+
+.chatbox::-webkit-scrollbar-thumb {
     width: 100%;
     background: #1f1f1f;
     border-radius: 5000px;
 }
-.chatbox::-webkit-scrollbar-thumb:hover{
+
+.chatbox::-webkit-scrollbar-thumb:hover {
     background: #2a2a2a;
+}
+
+.sidbox::-webkit-scrollbar {
+    width: 0;
 }
