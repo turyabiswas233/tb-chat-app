@@ -35,7 +35,7 @@ function Chats() {
 
   return (
     <div
-      className="flex gap-2 p-2 overflow-hidden
+      className="flex gap-2 p-2 overflow-auto
     relative w-full h-full bottom-2
     "
     >
