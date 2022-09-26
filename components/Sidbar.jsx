@@ -141,7 +141,9 @@ function Sidbar() {
     return (
       <p
         key={id}
-        className="flex items-center gap-2 my-1 text-white hover:bg-slate-600 rounded-md p-2 cursor-default"
+        className="flex items-center gap-2 my-1 text-white hover:bg-slate-600 rounded-md p-2 cursor-default 
+        
+        "
       >
         <input
           type="checkbox"
@@ -218,11 +220,11 @@ function Sidbar() {
 
       {showuser && (
         <div
-          className="fixed top-20 w-2/3 h-2/5 left-[17%] z-20 bg-stone-900 p-2 overflow-hidden grid
-        rounded-lg shadow-inner shadow-white
+          className="absolute top-20 md:top-14 md:w-max w-2/3 h-4/5 left-10 z-50  p-2 overflow-hidden grid
+        rounded-lg shadow-inner shadow-white backdrop-blur-md
         "
         >
-          <h2 className="text-white text-xs md:text-sm text-center w-2/3 h-fit mx-auto my-3  ">
+          <h2 className="text-slate-300 text-xs text-center w-3/4 md:w-2/3 h-fit mx-auto my-3  ">
             <span className="font-bold text-red-500 contrast-125">
               Cautious:{" "}
             </span>
@@ -231,7 +233,8 @@ function Sidbar() {
             <span className="font-bold text-red-500 contrast-125">cancel</span>{" "}
             button and start selecting from first.
           </h2>
-          <div className="w-full h-fit mb-2 mx-2 grid-cols-2 grid text-sm">
+          {/* button */}
+          <div className="w-2/3 h-fit mb-2 mx-auto grid-cols-2 grid text-sm">
             <button
               className="mx-auto w-20 h-10 text-center bg-green-800 text-white p-1 rounded-md hover:bg-green-600"
               onClick={addUsertoGrp}

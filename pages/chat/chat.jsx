@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import Message from "../../components/Message";
 import { auth, db } from "../../fbConf";
 // main function
-function Chat({ grpInfo, allow }) {
+function Chat({ grpInfo }) {
   const user = auth.currentUser;
   const router = useRouter();
   const { id } = router.query;
@@ -51,10 +51,12 @@ function Chat({ grpInfo, allow }) {
           </p>
         </div>
       );
+
     return msgs?.map((doc) => {
       return (
         <Message
           key={doc?.id}
+          id={doc?.id}
           text={doc?.text}
           sender={doc?.senderMail}
           time={doc?.time}
@@ -95,11 +97,6 @@ function Chat({ grpInfo, allow }) {
 
   //main body
 
-  let allowedMail = "";
-
-  allow?.filter((e) => {
-    return e.email == user?.email;
-  });
   return (
     <>
       <div className="w-full h-full relative flex flex-col">
@@ -160,12 +157,13 @@ function Chat({ grpInfo, allow }) {
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between w-full h-[50px] text-sm mb-1">
+              <div className="flex items-center justify-between w-full h-min text-sm mb-1 py-2 z-10">
                 {/* message sent btn section */}
                 <p
                   className="w-2/3 rounded-md resize-none outline-none border-none dark:bg-zinc-900 bg-zinc-400
-          dark:text-zinc-100 px-2 h-full overflow-hidden 
-             placeholder:text-zinc-700 mx-auto text-xs text-center flex items-center justify-center
+          text-zinc-700 px-2 h-fit p-1 overflow-hidden 
+             placeholder:text-zinc-700 mx-auto text-xs text-center flex items-center justify-center break-words
+             select-none
             "
                 >
                   Only Admin of this group can send message. Remember, this

@@ -8,16 +8,21 @@ function Navbar() {
   const user = auth.currentUser;
   const [us, setuser] = useState();
   const rout = useRouter();
-  const { id } = rout.query;
+ 
   useEffect(() => {
     setuser(user);
   }, [user]);
-
+  
   const memo = useMemo(() => {
     return (
       <>
         <li className="font-bold flex dark:bg-gray-600 bg-gray-400 p-1 md:p-2 rounded-full justify-center items-center w-fit">
-          {id ? <Link href={"/chat"}>Private Message</Link> : "Private Message"}
+          <Link
+            href={"/chat"}
+           
+          >
+            Private Message
+          </Link>
         </li>
 
         {us ? (

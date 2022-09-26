@@ -11,7 +11,6 @@ function Chats() {
   const [grpInfo, setgrpInfo] = useState({});
   const { id } = router.query;
   const [render, setrender] = useState(true);
-  const arrRef = useRef();
 
   {
     /*fetch group details*/
@@ -39,8 +38,21 @@ function Chats() {
     relative w-full h-full bottom-2
     "
     >
-      <Sidbar />
-      <Chat grpInfo={grpInfo} />
+      {user ? (
+        <>
+          <Sidbar />
+          <Chat grpInfo={grpInfo} />
+        </>
+      ) : (
+        <>
+          <h2
+            className="my-auto mx-auto relative h-full flex
+        justify-center items-center md:text-2xl text-lg w-2/3 capitalize text-center text-zinc-700 break-words"
+          >
+            Login to see data
+          </h2>
+        </>
+      )}
     </div>
   );
 }

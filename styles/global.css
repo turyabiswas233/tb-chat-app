@@ -17,7 +17,11 @@ html {
     overflow: hidden;
     background: #aaa2;
     color: #222;
+}
 
+p::selection {
+    background: #000;
+    color: #eaeaea;
 }
 
 .grp_name {
@@ -25,15 +29,15 @@ html {
 }
 
 .grp_name {
-    left: 0%
+    left: 0%;
 }
 
 .grp_list:hover>.grp_name {
     width: 85%;
-    left: 7.5%
+    left: 7.5%;
 }
 
-@media screen and (max-width:768px) {
+@media screen and (max-width: 768px) {
     .grp_list:hover .grp_name {
         width: 82%;
         left: 9%;
@@ -44,13 +48,11 @@ html {
     }
 }
 
-
 @media (prefers-color-scheme: dark) {
     body {
         background: #222;
         color: #eaeaea;
     }
-
 }
 
 .chatbox::-webkit-scrollbar {
@@ -71,3 +73,14 @@ html {
 .sidbox::-webkit-scrollbar {
     width: 0;
 }
+
+
+/* emoji effect */
+.emoji {
+    display: none;
+}
+
+.msg-class:hover .emoji {
+    display: block;
+}
+
