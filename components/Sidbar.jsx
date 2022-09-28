@@ -11,6 +11,7 @@ import {
   updateDoc,
   arrayUnion,
 } from "firebase/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
 import { MdPersonAdd, MdRemoveCircle } from "react-icons/md";
 
 function Sidbar() {
@@ -22,31 +23,12 @@ function Sidbar() {
   const [create, setCreate] = useState(false);
   const [showuser, setshowUser] = useState(false);
   const [us, setus] = useState([]);
-
   const grpRef = collection(db, "groups");
-
-  // fetch available groups
-  async function Data() {
-    const users = collection(db, `groups`);
-    const userList = await getDocs(users);
-    setlist(
-      userList.docs
-        .map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
-        .sort((a, b) => {
-          if (a.grpname < b.grpname) return -1;
-        })
-    );
-  }
-
-  useEffect(() => {
-    Data().catch((e) => {
-      alert(e);
-    });
-    setrend(false);
-  }, [user, id, rend]);
+  const [snap, load, error] = useCollection(grpRef);
+  const groups = snap?.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 
   // create new groups
   function handleCreate() {
@@ -270,8 +252,21 @@ function Sidbar() {
         className="w-full h-full overflow-y-auto sidbox text-white 
       "
       >
-        {chatlist?.length != 0 ? (
-          chatlist?.map((ele) => {
+        {load && (
+          <>
+            <div
+              className="relative h-full flex
+        justify-center items-center
+        "
+            >
+              <p className="md:text-2xl text-lg w-2/3 capitalize text-center text-zinc-700 break-words">
+                Loading...
+              </p>
+            </div>
+          </>
+        )}
+        {groups?.length != 0 ? (
+          groups?.map((ele) => {
             return (
               <li
                 key={ele?.id}

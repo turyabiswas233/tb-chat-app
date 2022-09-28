@@ -1,45 +1,54 @@
 // import modules & components
-import { addDoc, collection, getDocs } from "firebase/firestore";
-import { useRouter } from "next/router";
 import { useEffect, useMemo, useState, useRef } from "react";
-import Message from "../../components/Message";
+import { useRouter } from "next/router";
 import { auth, db } from "../../fbConf";
+import Message from "../../components/Message";
+import { addDoc, collection, getDocs } from "firebase/firestore";
+import { useCollection } from "react-firebase-hooks/firestore";
+import Picker from "emoji-picker-react";
+import { MdFace } from "react-icons/md";
 // main function
 function Chat({ grpInfo }) {
   const user = auth.currentUser;
   const router = useRouter();
   const { id } = router.query;
-  const [msgs, setmsgs] = useState([]);
   const [text, settxt] = useState("");
-  const [render, setrender] = useState(true);
   const bottomChat = useRef();
+  const [shemoji, setshemoji] = useState(false);
+  function showEmoji() {
+    setshemoji(!shemoji);
+  }
 
   {
     /*get messages from DB */
   }
-  async function getMessages() {
-    const ref = collection(db, `groups/${id}/messages`);
-    const data = await getDocs(ref);
-    setmsgs(
-      data?.docs
-        ?.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
-        .sort((a, b) => {
-          if (a.time < b.time) return -1;
-        })
-    );
-  }
-  //call function to get MSG
-  useEffect(() => {
-    getMessages().then(() => {
-      setrender(false);
-    });
-  }, [id, render]);
 
-  const memoMsg = useMemo(() => {
-    if (msgs?.length == 0)
+  const [snapshot, load, error] = useCollection(
+    collection(db, `groups/${id}/messages`)
+  );
+  const EmojiPicker = () => {
+    const onEmojiClick = (event) => {
+      settxt(text + event?.emoji);
+    };
+    return (
+      <div
+        className={`fixed bottom-6 right-10 scale-75 after:absolute after:w-8 after:h-8 after:bg-white after:right-10 after:-bottom-2 after:rotate-45 shadow-slate-400 shadow-md after:shadow-md after:shadow-slate-400 after:-z-10 rounded-lg`}
+      >
+        <Picker onEmojiClick={onEmojiClick} />
+      </div>
+    );
+  };
+  const chats = snapshot?.docs
+    .map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }))
+    .sort((a, b) => {
+      if (a.time < b.time) return -1;
+    });
+
+  const MemoMsg = () => {
+    if (chats?.length == 0)
       return (
         <div
           className="relative h-full flex
@@ -51,23 +60,36 @@ function Chat({ grpInfo }) {
           </p>
         </div>
       );
-
-    return msgs?.map((doc) => {
+    if (load) {
       return (
-        <Message
-          key={doc?.id}
-          id={doc?.id}
-          text={doc?.text}
-          sender={doc?.senderMail}
-          time={doc?.time}
-          email={user?.email}
-          img={doc?.image}
-        />
+        <div
+          className="relative h-full flex
+        justify-center items-center
+        "
+        >
+          <p className="md:text-2xl text-lg w-2/3 capitalize text-center text-zinc-700 break-words">
+            Loading...
+          </p>
+        </div>
       );
-    });
-  }, [msgs]);
+    } else
+      return chats?.map((doc) => {
+        return (
+          <Message
+            key={doc?.id}
+            id={doc?.id}
+            text={doc?.text}
+            sender={doc?.senderMail}
+            time={doc?.time}
+            email={user?.email}
+            img={doc?.image}
+          />
+        );
+      });
+  };
 
   // ref to chat bottom
+
   useEffect(() => {
     setTimeout(
       bottomChat?.current?.scrollIntoView({
@@ -77,7 +99,7 @@ function Chat({ grpInfo }) {
       }),
       100
     );
-  }, [msgs]);
+  }, [chats]);
 
   // add new message to database
   async function sendMsg(txt) {
@@ -117,61 +139,54 @@ function Chat({ grpInfo }) {
           className="flex flex-col justify-between overflow-hidden h-full w-full"
           onSubmit={(e) => {
             e.preventDefault();
-            sendMsg(text).then(() => {
-              settxt("");
-              setrender(true);
-            });
+            sendMsg(text);
+            setshemoji(false);
+            settxt("");
           }}
         >
           {/* first part msgs */}
           <div className="overflow-y-auto p-2 flex flex-col chatbox">
             {/* messege section */}
-            {memoMsg}
+            <MemoMsg />
             <div ref={bottomChat}></div>
           </div>
           {/* second pard msg tool */}
-          {grpInfo?.admin == user?.email ? (
-            <div className="flex items-center justify-between w-full h-[50px] text-sm mb-1">
-              {/* message sent btn section */}
-              <input
-                className="w-full min-w-xs mx-2 rounded-md resize-none outline-none border-none dark:bg-zinc-900 bg-zinc-400
+
+          <div className="flex items-center justify-between w-full h-[50px] text-sm pt-1">
+            {/* message sent btn section */}
+            <input
+              className="w-2/3 md:w-full min-w-xs mx-2 rounded-md resize-none outline-none border-none dark:bg-zinc-900 bg-zinc-400
           dark:text-zinc-100 px-2 h-full overflow-hidden 
              placeholder:text-zinc-700 
             "
-                type="text"
-                required
-                placeholder="type a message"
-                onChange={(e) => {
-                  settxt(e.target.value);
-                }}
-                value={text}
+              type="text"
+              required
+              placeholder="type a message"
+              onChange={(e) => {
+                settxt(e.target.value);
+              }}
+              onClick={() => {
+                setshemoji(false);
+              }}
+              value={text}
+            />
+            <div className="relative">
+              <MdFace
+                className={` p-2 h-full w-9 text-3xl mx-3  rounded-md hover:bg-gray-900 cursor-pointer ${
+                  shemoji ? "bg-gray-900" : "bg-gray-800"
+                }`}
+                onClick={showEmoji}
               />
-
-              <button
-                type="submit"
-                className="bg-stone-900 px-3 h-full py-2 rounded-lg mx-2 hover:bg-white text-white hover:text-stone-900 font-bold transition-all border-stone-900 border-4
-          uppercase tracking-wider"
-              >
-                send
-              </button>
+              {shemoji && <EmojiPicker />}
             </div>
-          ) : (
-            <>
-              <div className="flex items-center justify-between w-full h-min text-sm mb-1 py-2 z-10">
-                {/* message sent btn section */}
-                <p
-                  className="w-2/3 rounded-md resize-none outline-none border-none dark:bg-zinc-900 bg-zinc-400
-          text-zinc-700 px-2 h-fit p-1 overflow-hidden 
-             placeholder:text-zinc-700 mx-auto text-xs text-center flex items-center justify-center break-words
-             select-none
-            "
-                >
-                  Only Admin of this group can send message. Remember, this
-                  group can be seen by public.
-                </p>
-              </div>
-            </>
-          )}
+            <button
+              type="submit"
+              className="bg-stone-900 px-3 h-full py-2 rounded-lg mx-2 hover:bg-white text-white hover:text-stone-900 font-bold transition-all border-stone-900 border-4
+          uppercase tracking-wider"
+            >
+              send
+            </button>
+          </div>
         </form>
       </div>
     </>
