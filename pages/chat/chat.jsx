@@ -1,12 +1,11 @@
 // import modules & components
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import { auth, db } from "../../fbConf";
 import Message from "../../components/Message";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
-import Picker from "emoji-picker-react";
-import { MdFace } from "react-icons/md";
+
 // main function
 function Chat({ grpInfo }) {
   const user = auth.currentUser;
@@ -14,10 +13,7 @@ function Chat({ grpInfo }) {
   const { id } = router.query;
   const [text, settxt] = useState("");
   const bottomChat = useRef();
-  const [shemoji, setshemoji] = useState(false);
-  function showEmoji() {
-    setshemoji(!shemoji);
-  }
+  
 
   {
     /*get messages from DB */
@@ -26,18 +22,7 @@ function Chat({ grpInfo }) {
   const [snapshot, load, error] = useCollection(
     collection(db, `groups/${id}/messages`)
   );
-  const EmojiPicker = () => {
-    const onEmojiClick = (event) => {
-      settxt(text + event?.emoji);
-    };
-    return (
-      <div
-        className={`fixed bottom-6 right-10 scale-75 after:absolute after:w-8 after:h-8 after:bg-white after:right-10 after:-bottom-2 after:rotate-45 shadow-slate-400 shadow-md after:shadow-md after:shadow-slate-400 after:-z-10 rounded-lg`}
-      >
-        <Picker onEmojiClick={onEmojiClick} />
-      </div>
-    );
-  };
+  
   const chats = snapshot?.docs
     .map((doc) => ({
       id: doc.id,
@@ -165,20 +150,10 @@ function Chat({ grpInfo }) {
               onChange={(e) => {
                 settxt(e.target.value);
               }}
-              onClick={() => {
-                setshemoji(false);
-              }}
+              
               value={text}
             />
-            <div className="relative">
-              <MdFace
-                className={` p-2 h-full w-9 text-3xl mx-3  rounded-md hover:bg-gray-900 cursor-pointer ${
-                  shemoji ? "bg-gray-900" : "bg-gray-800"
-                }`}
-                onClick={showEmoji}
-              />
-              {shemoji && <EmojiPicker />}
-            </div>
+            
             <button
               type="submit"
               className="bg-stone-900 px-3 h-full py-2 rounded-lg mx-2 hover:bg-white text-white hover:text-stone-900 font-bold transition-all border-stone-900 border-4
