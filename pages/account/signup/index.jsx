@@ -86,10 +86,9 @@ function Signup() {
             })
             .catch((err) => {
               setload(false);
-              deleteUser(auth.currentUser).then(() => {
-                auth.signOut();
-                setload(false);
-              });
+              if (auth.currentUser) {
+                deleteUser(auth.currentUser);
+              }
               console.log(err?.message);
             });
         });
@@ -100,10 +99,9 @@ function Signup() {
           err1: "Failed to create your profile",
           type: "userNotCreated",
         }));
-        deleteUser(auth.currentUser).then(() => {
-          auth.signOut();
-          setload(false);
-        });
+        if (auth.currentUser) {
+          deleteUser(auth.currentUser);
+        }
         setload(false);
       });
   }
