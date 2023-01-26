@@ -1,20 +1,18 @@
 import Chat from "./chat";
-import Sidbar from "../../components/Sidbar";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { doc, getDoc, where } from "firebase/firestore";
-import { auth, db } from "../../fbConf";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../fbConf";
+import { useAuthContext } from "../../components/context/AuthContext";
 
 function Chats() {
   const router = useRouter();
-  const user = auth.currentUser;
+  const { currentUser } = useAuthContext();
   const [grpInfo, setgrpInfo] = useState({});
   const { id } = router.query;
   const [render, setrender] = useState(true);
 
-  {
-    /*fetch group details*/
-  }
+  //fetch group details
   // get grp info
   async function getGrpDetails() {
     const grpRef = doc(db, `groups/${id}`);
@@ -24,7 +22,6 @@ function Chats() {
       setgrpInfo(grpDet?.data());
     }
   }
-
   // call function to get grp
   useEffect(() => {
     getGrpDetails().then(() => {
@@ -33,27 +30,18 @@ function Chats() {
   }, [id, render]);
 
   return (
-    <div
-      className="flex gap-2 p-2 overflow-auto
-    relative w-full h-full bottom-2
-    "
-    >
-      {user ? (
+    <>
+      <Chat grpInfo={grpInfo} />
+      {!currentUser && (
         <>
-          <Sidbar />
-          <Chat grpInfo={grpInfo} />
-        </>
-      ) : (
-        <>
-          <h2
-            className="my-auto mx-auto relative h-full flex
-        justify-center items-center md:text-2xl text-lg w-2/3 capitalize text-center text-zinc-700 break-words"
-          >
-            Login to see data
-          </h2>
+          <div className="my-auto w-3/5 mx-auto text-center text-zinc-700">
+            <h2>
+              You must <span className="font-bold uppercase tracking-tighter">sign in</span> to view chats in this group
+            </h2>
+          </div>
         </>
       )}
-    </div>
+    </>
   );
 }
 

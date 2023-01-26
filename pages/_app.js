@@ -1,27 +1,31 @@
+import { useContext } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { AuthContextProvider, user } from "../components/context/AuthContext";
 import Navbar from "../components/Navbar";
-import { auth } from "../fbConf";
 import "../styles/global.css";
+import LeftSidbar from "../components/LeftSidbar";
 
 function MyApp({ Component, pageProps }) {
-  const user = auth.currentUser;
-  const [us, setus] = useState();
-  const router = useRouter();
-  useState(() => {
-    if (user) {
-      router.push("/chat");
-    }
-  }, [us]);
+  const rout = useRouter();
+  const path = rout.pathname;
+  const isChatpanel = path.includes("chat");
+  const { currentUser } = useContext(user);
+
   return (
-    <div className="h-screen overflow-auto relative flex flex-col gap-2 selection:bg-slate-600 selection:text-zinc-900">
-      <Head>
-        <title>TB Chat App</title>
-      </Head>
-      <Navbar />
-      <Component {...pageProps} />
-    </div>
+    <AuthContextProvider>
+      <div className="relative h-screen overflow-none flex flex-col bg-primary_bg_dark text-msg_txt">
+        <Head>
+          <title>Trustenger</title>
+        </Head>
+        <Navbar />
+        <div className="flex overflow-auto relative w-full h-full bottom-0 pb-0">
+          <LeftSidbar path={isChatpanel} isUser={currentUser} />
+
+          <Component {...pageProps} />
+        </div>
+      </div>
+    </AuthContextProvider>
   );
 }
 

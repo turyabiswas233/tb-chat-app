@@ -1,86 +1,54 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind variants;
 
 * {
-    margin: 0;
-    padding: 0%;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0%;
+  box-sizing: border-box;
 }
 
 body,
 html {
-    padding: 0%;
-    margin: 0%;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    background: #aaa2;
-    color: #222;
+  padding: 0%;
+  margin: 0%;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #fff;
+  color: #222;
 }
-
+pre{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 p::selection {
-    background: #000;
-    color: #eaeaea;
+  background: #000;
+  color: #eaeaea;
 }
 
-.grp_name {
-    z-index: 10;
-}
-
-.grp_name {
-    left: 0%;
-}
-
-.grp_list:hover>.grp_name {
-    width: 85%;
-    left: 7.5%;
+.shadow-me:hover {
+  box-shadow: 0 0 10px 4px slategray;
 }
 
 @media screen and (max-width: 768px) {
-    .grp_list:hover .grp_name {
-        width: 82%;
-        left: 9%;
-    }
+  .grp_list:hover .grp_name {
+    width: 82%;
+    left: 9%;
+  }
 
-    .grp_list:hover p {
-        transform: scale(0.85);
-    }
+  .grp_list:hover p {
+    transform: scale(0.85);
+  }
 }
 
 @media (prefers-color-scheme: dark) {
-    body {
-        background: #222;
-        color: #eaeaea;
-    }
+  body {
+    background: #222;
+    color: #eaeaea;
+  }
 }
 
-.chatbox::-webkit-scrollbar {
-    width: 4px;
-    background: #0003;
+::-webkit-scrollbar {
+  width: 0;
 }
-
-.chatbox::-webkit-scrollbar-thumb {
-    width: 100%;
-    background: #1f1f1f;
-    border-radius: 5000px;
-}
-
-.chatbox::-webkit-scrollbar-thumb:hover {
-    background: #2a2a2a;
-}
-
-.sidbox::-webkit-scrollbar {
-    width: 0;
-}
-
-
-/* emoji effect */
-.emoji {
-    display: none;
-}
-
-.msg-class:hover .emoji {
-    display: block;
-}
-

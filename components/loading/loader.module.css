@@ -1,0 +1,45 @@
+section.loader {
+  position: relative;
+  animation: hue_rot 2.5s linear infinite;
+  margin: auto;
+}
+
+section.loader p {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+section.loader p span {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #d8f8af;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #0b74b1, 0 0 20px #28f16b, 0 0 20px #34abf0,
+    0 0 20px #34abf0, 0 0 20px #0dcfcf;
+  animation: animate 1s linear infinite;
+}
+
+@keyframes animate {
+  0% {
+    transform: scale(.7);
+  }
+
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes hue_rot {
+  0% {
+    filter: hue-rotate(50deg);
+  }
+
+  100% {
+    filter: hue-rotate(350deg);
+  }
+}

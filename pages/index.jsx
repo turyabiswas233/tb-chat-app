@@ -1,17 +1,31 @@
+import { useAuthContext } from "../components/context/AuthContext";
+ 
 function Home() {
-  const dftxt = "login to start chat";
+  const IfNotUser = () =>{
+    return (
+      <>
+        <span className="font-bold px-1">Sign in </span> to start chat...
+      </>
+    );
+  };
+  const IfUser = () => {
+    return <>
+      click on <span className="px-2 text-slate-800 font-bold">Private Message</span> to chat
+    </>
+  };
+  const {currentUser} = useAuthContext()
 
-  return (
-    <div className="w-2/3 mx-auto h-2/3 flex items-center justify-center">
+   return (
+
       <h2
         className="my-auto mx-auto relative h-full flex
-        justify-center items-center md:text-2xl text-lg w-2/3 capitalize text-center text-zinc-700 break-words
+        justify-center items-center md:text-2xl text-lg w-2/3  text-center text-zinc-700 break-words
         
         "
       >
-        Login to see data
+        {currentUser ? <IfUser /> : <IfNotUser />}
       </h2>
-    </div>
+    
   );
 }
 
