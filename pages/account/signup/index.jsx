@@ -194,26 +194,7 @@ function Signup() {
               {!showPass ? <AiFillEye /> : <AiFillEyeInvisible />}
             </span>
           </section>
-          {/* <section
-            className={`bg-black text-white rounded-full p-4 ring-2 ${
-              !userCred.photo
-                ? "ring-0"
-                : userCred.photo
-                ? "ring-cyan-500"
-                : "ring-rose-500"
-            } shadow-[0_0_15px_-10px] my-2 shadow-rose-100 flex gap-2 transition-all items-center border border-msg_txt/50 relative`}
-          >
-            <label htmlFor="file">
-              <MdPhoto color="#a2affc" />
-            </label>
-            <Input
-              type={"file"}
-              value={userCred.photo}
-              placeholder={"add profile photo"}
-              getValue={photo}
-              ariaHidden={true}
-            />
-          </section> */}
+
           {error.type !== "userNotCreated" && (
             <h2
               className={` 

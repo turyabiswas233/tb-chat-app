@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { AuthContextProvider, user } from "../components/context/AuthContext";
@@ -10,7 +9,6 @@ function MyApp({ Component, pageProps }) {
   const rout = useRouter();
   const path = rout.pathname;
   const isChatpanel = path.includes("chat");
-  const { currentUser } = useContext(user);
 
   return (
     <AuthContextProvider>
@@ -20,8 +18,11 @@ function MyApp({ Component, pageProps }) {
         </Head>
         <Navbar />
         <div className="flex overflow-auto relative w-full h-full bottom-0 pb-0">
-          <LeftSidbar path={isChatpanel} isUser={currentUser} />
-
+          <LeftSidbar
+            restClass={"md:static fixed md:bg-transparent bg-friend_bg"}
+            path={isChatpanel}
+            isUser={user}
+          />
           <Component {...pageProps} />
         </div>
       </div>

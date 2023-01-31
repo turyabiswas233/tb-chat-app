@@ -1,51 +1,64 @@
 import Image from "next/image";
-import { MdFace } from "react-icons/md";
 
-function Message({ uid, sender, img, text, time, showTime, senderName }) {
+function Message({ uid, sender, img, text, time, showTime }) {
   // timeing function
   let now = new Date();
-  let today = new Date().getDate();
   let date = new Date(time);
-  let msgDate = date?.getDate();
+  let today = new Date().getDate();
   let hr = date?.getHours();
   let min = date?.getMinutes();
-  // time
-  let newDate =
-    time &&
-    new Intl.DateTimeFormat("en-US", {
-      dateStyle: "medium",
-      timeStyle: "medium",
-    }).format(date);
+  const days = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+  ];
+  const months = [
+    "jan",
+    "feb",
+    "mar",
+    "apr",
+    "may",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "oct",
+    "nov",
+    "dec",
+  ];
 
+  // time
   let initialDate = {
-    mm: newDate?.slice(0, 3),
-    dd: newDate?.slice(3, 6),
-    yy: newDate?.slice(7, 12),
+    dd: date?.getDate(),
+    mm: months[date?.getMonth()],
+    yy: date?.getFullYear(),
+    day: days[date?.getDay()],
     time: {
       h: hr > 12 ? hr - 12 : hr == 0 ? 12 : hr,
       m: min < 10 ? `0${min}` : min,
-      a_p: newDate?.slice(-2),
+      a_p: hr >= 12 ? "pm" : "am",
     },
   };
-  let defer = today - msgDate;
+  let defer = today - initialDate.dd;
   let show_date_in_24hour = defer < 1;
   let yesterday = 1 <= defer && defer < 2;
   let show_date_in_7days = 2 <= defer && defer < 7;
-  let show_date_after_7days = 7 <= defer;
   let in1_5min = now - time < 1.5 * 60 * 1000;
+  //final time
+  let finalTime = `${initialDate.dd} ${initialDate.mm} ${
+    show_date_in_7days ? initialDate.day : initialDate.yy
+  }`;
+
+  // timeing function
+
+  // linking part
   let isLink = text?.includes("http");
   var arr = (isLink && text?.split(/(http.*?\ )/)) || [];
   let lnid = 0;
-  let finalTime = show_date_in_24hour
-    ? `today ${initialDate.time.h}:${initialDate.time.m} ${initialDate.time.a_p}`
-    : yesterday
-    ? `yesterday ${initialDate.time.h}:${initialDate.time.m} ${initialDate.time.a_p}`
-    : show_date_in_7days
-    ? `${initialDate.dd} ${initialDate.mm} ${initialDate.time.h}:${initialDate.time.m} ${initialDate.time.a_p}`
-    : show_date_after_7days &&
-      `${initialDate.dd} ${initialDate.mm} ${initialDate.yy}`;
-
-  // timeing function
 
   // sexy condition :")
   let isSexual =
@@ -55,14 +68,17 @@ function Message({ uid, sender, img, text, time, showTime, senderName }) {
     <>
       {showTime && !isSexual && (
         <span
-          className="mx-auto font-extralight font-mono text-xs relative capitalize before:w-auto before:h-1 before:bg-black before:absolute top-0
+          className="mx-auto font-extralight font-mono text-xs relative uppercase before:w-auto before:h-1 before:bg-black before:absolute top-0
           opacity-50 select-none py-5"
         >
-          {defer == 0
-            ? `${initialDate.dd} ${initialDate.mm}, today`
-            : defer == 1
-            ? `${initialDate.dd} ${initialDate.mm}, yesterday`
-            : finalTime}
+          {initialDate.dd} {initialDate.mm},{" "}
+          {show_date_in_24hour
+            ? "today"
+            : yesterday
+            ? "yesterday"
+            : show_date_in_7days
+            ? initialDate.day
+            : initialDate.yy}
         </span>
       )}
       {uid == sender ? (
@@ -70,8 +86,9 @@ function Message({ uid, sender, img, text, time, showTime, senderName }) {
         <div
           className="self-end flex relative max-h-max msg-class"
           title={
-            isSexual == true &&
-            "You should not sent such sexual text to any public place.\nIf you want to send some helpful message,\nthen type the words including a star(*) inside of the s*xual words."
+            isSexual == true
+              ? "You should not sent such sexual text to any public place.\nIf you want to send some helpful message,\nthen type the words including a star(*) inside of the s*xual words."
+              : ""
           }
         >
           <p
@@ -119,7 +136,9 @@ function Message({ uid, sender, img, text, time, showTime, senderName }) {
             <br />
             {!isSexual && (
               <span className="text-gray-200 font-extralight w-fit drop-shadow-md shadow-red-500 text-[.6rem] bg-transparent  text-right float-right px-1 -mr-1 tracking-wider select-none">
-                {in1_5min ? "Just Now" : finalTime?.slice(-8)}
+                {in1_5min
+                  ? "Just Now"
+                  : `${initialDate.time.h}:${initialDate.time.m} ${initialDate.time.a_p}`}
               </span>
             )}
           </p>
@@ -189,7 +208,9 @@ function Message({ uid, sender, img, text, time, showTime, senderName }) {
               )}
               <br />
               <span className="text-gray-200 font-extralight w-fit drop-shadow-md shadow-red-500 text-[.6rem] bg-transparent text-right float-left select-none">
-                {finalTime?.slice(-8)}
+                {in1_5min
+                  ? "Just Now"
+                  : `${initialDate.time.h}:${initialDate.time.m} ${initialDate.time.a_p}`}
               </span>
             </p>
             {img && (

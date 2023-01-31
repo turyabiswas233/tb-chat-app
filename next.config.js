@@ -11,7 +11,7 @@ const nextConfig = {
     APP_ID: process.env.NEXT_APP_APP_ID,
   },
   images: {
-    domains: ["lh3.googleusercontent.com"],
+    domains: ["lh3.googleusercontent.com", "firebasestorage.googleapis.com"],
     formats: ["image/webp", "image/avif"],
   },
 };

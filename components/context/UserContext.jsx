@@ -4,7 +4,6 @@ import { db } from "../../fbConf";
 import { collection } from "firebase/firestore";
 import { useCollection } from "react-firebase-hooks/firestore";
 //icons
-import { GrGroup } from "react-icons/gr";
 import Loading from "../loading/loading";
 import { MdGroup } from "react-icons/md";
 
@@ -53,7 +52,7 @@ export const UserContext = ({ create }) => {
             return (
               <li
                 key={ind}
-                className={` flex overflow-x-hidden items-center cursor-pointer my-4 py-1 h-10 md:h-16 mx-auto overflow-hidden transition-all  ${
+                className={` flex items-center cursor-pointer my-4 py-1 h-10 md:h-16 mx-auto transition-all group relative ${
                   !create
                     ? "rounded-full w-10 md:w-full"
                     : "rounded-md w-full md:w-full"
@@ -80,6 +79,10 @@ export const UserContext = ({ create }) => {
                     {ele?.grpname}
                   </span>
                 </p>
+                {/* title */}
+                <span className="group-hover:md:visible group-hover:opacity-100 transition-opacity duration-500 invisible opacity-5 absolute top-full left-0 z-50 pointer-events-none w-auto h-fit p-2 bg-slate-900 text-cyan-50 text-sm rounded-md shadow shadow-slate-900">
+                  {ele?.grpname}
+                </span>
               </li>
             );
           })

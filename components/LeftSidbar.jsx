@@ -7,11 +7,13 @@ import {
   updateDoc,
   arrayUnion,
 } from "firebase/firestore";
-import { MdAddCircle } from "react-icons/md";
+import { MdClose, MdMenu } from "react-icons/md";
 import { UserContext } from "./context/UserContext";
 import { useAuthContext } from "./context/AuthContext";
+//icons
+import { BiMessageRoundedAdd } from "react-icons/bi";
 
-function LeftSidbar({ path, isUser }) {
+function LeftSidbar({ path, isUser, restClass }) {
   const [create, setCreate] = useState(false);
   const grpRef = collection(db, "groups");
   const { currentUser } = useAuthContext();
@@ -53,9 +55,9 @@ function LeftSidbar({ path, isUser }) {
   if (path && isUser)
     return (
       <div
-        className={`flex flex-col gap-2 overflow-hidden h-full  p-0 transition-all ${
-          !create ? "w-20" : "w-[30ch]"
-        } md:w-[50ch]`}
+        className={`flex flex-col gap-2 overflow-hidden h-full p-0 transition-all z-[100]  ${
+          !create ? "w-20" : "w-[25ch] shadow-lg shadow-white"
+        } md:w-[45ch] ${restClass}`}
       >
         {/* create new group */}
         <div
@@ -64,10 +66,10 @@ function LeftSidbar({ path, isUser }) {
           } transition-all duration-500 text-sm`}
         >
           <button
-            className="bg-slate-400 w-fit rounded-full text-xs font-bold tracking-widest mx-auto scale-[2] my-3"
+            className=" w-fit rounded-full text-xs font-bold tracking-widest mx-auto scale-[2] my-3"
             onClick={handleCreate}
           >
-            <MdAddCircle />
+            {create ? <MdClose /> : <MdMenu />}
           </button>
           <form
             className={`w-full grid grid-cols-1 gap-1 
@@ -90,13 +92,13 @@ function LeftSidbar({ path, isUser }) {
                 setgrp(e.target.value);
               }}
             />
-            <button className="font-sans font-semibold bg-slate-800 rounded-full py-2 px-4 w-fit mx-auto ring ring-owner_bg/60 mt-5 hover:ring-owner_bg transition-all duration-300">
-              Create
+            <button className="font-sans font-semibold flex gap-1 items-center bg-slate-800 rounded-full py-2 px-4 w-fit mx-auto ring ring-owner_bg/60 mt-5 hover:ring-owner_bg transition-all duration-300">
+              Create <BiMessageRoundedAdd />
             </button>
           </form>
         </div>
 
-        <UserContext create={create} />
+        {currentUser && <UserContext create={create} />}
       </div>
     );
 }

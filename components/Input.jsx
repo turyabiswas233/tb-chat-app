@@ -13,7 +13,7 @@ function Input({
   return (
     <>
       <input
-        className={`text-white bg-transparent placeholder:text-cyan-100 placeholder:opacity-50 focus:outline-none `}
+        className={`text-white bg-transparent placeholder:text-cyan-100 placeholder:opacity-50 focus:outline-none placeholder:capitalize`}
         type={type == "password" ? (showPass ? "text" : type) : type}
         name={type}
         id={type}
@@ -29,7 +29,10 @@ function Input({
         }}
       />
       {ariaHidden && type == "file" && (
-        <label htmlFor={type} className="text-cyan-100 opacity-50">
+        <label
+          htmlFor={type}
+          className="text-cyan-100 opacity-50 w-56 overflow-hidden"
+        >
           {value ? `${value?.name}` : "Add profile photo"}
         </label>
       )}

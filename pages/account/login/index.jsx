@@ -37,7 +37,7 @@ function Login() {
       image: user?.photoURL,
     })
       .then(() => {
-        router.push("/chat/");
+        router.push("/");
       })
       .catch((err) => {
         console.log(err?.message);

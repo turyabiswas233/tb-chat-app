@@ -1,3 +1,5 @@
+/* fonts */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -18,10 +20,9 @@ html {
   overflow: hidden;
   background: #fff;
   color: #222;
+  font-family: 'Nunito Sans', sans-serif;
 }
-pre{
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+
 p::selection {
   background: #000;
   color: #eaeaea;

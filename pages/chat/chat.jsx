@@ -51,6 +51,7 @@ function Chat({ grpInfo }) {
       );
     }
     return chatsRef.current.values?.map((doc, id, arr) => {
+      let today = new Date().getMilliseconds();
       let curDate = new Date(doc?.time).getDate();
       let showDateOnce = preDate == curDate;
       preDate = curDate;
@@ -65,6 +66,7 @@ function Chat({ grpInfo }) {
           uid={user?.uid}
           img={arr[id + 1]?.image !== doc?.image && doc?.image}
           time={doc?.time}
+          hasImg={doc?.image}
           showTime={id != 0 && showDateOnce ? false : true}
         />
       );
@@ -81,7 +83,8 @@ function Chat({ grpInfo }) {
         if (a.time < b.time) return -1;
       });
   });
-  // ref to chat bottom
+
+  // ref to last chat
   useEffect(() => {
     setTimeout(
       bottomChat?.current?.scrollIntoView({
@@ -310,7 +313,7 @@ function Chat({ grpInfo }) {
   if (user)
     return (
       <>
-        <div className="w-full h-full relative flex flex-row p-0">
+        <div className="w-[calc(100%-80px)] md:w-full h-full absolute md:static flex flex-row p-0 right-0">
           {/* group info panel */}
           <section className="flex-auto flex flex-col w-auto max-w-2xl mx-auto">
             <GroupInfo grp={grpInfo} />
@@ -323,10 +326,10 @@ function Chat({ grpInfo }) {
             </div>
             {/* handle message send */}
             <div className="flex bg-slate-900/50 justify-between overflow-hidden h-16 w-11/12 mx-auto rounded-2xl py-px">
-              {/* pard msg tool || input and submit*/}
+              {/* part msg tool || input and submit*/}
               {/* message sent btn section */}
               <div
-                className={`flex items-center  rounded-2xl justify-between w-full min-h-fit text-sm p-1 ${
+                className={`flex items-center rounded-2xl justify-between w-full min-h-fit text-sm p-1 ${
                   noText ? "ring-1 ring-rose-600 ring-inset" : ""
                 }`}
               >

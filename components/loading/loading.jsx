@@ -79,8 +79,8 @@ function Loading({ w, h }) {
               <span
                 style={{
                   animationDelay: `calc(${(id + 1) * 0.1}s)`,
-                  width: min / 2.5,
-                  height: min / 2.5,
+                  width: min && min / 2.5,
+                  height: min && min / 2.5,
                 }}
               ></span>
             </p>

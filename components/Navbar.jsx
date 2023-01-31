@@ -14,7 +14,7 @@ function Navbar() {
     return (
       <>
         <li>
-          <Link href={currentUser ? "/chat" : "/"}>
+          <Link href={"/"}>
             <a
               className="font-bold flex bg-friend_bg text-lime-100 px-4 p-2 rounded-full justify-center items-center w-fit gap-3 capitalize hover:text-green-500 transition-all"
               title={currentUser ? currentUser?.displayName : "Home"}
@@ -24,7 +24,7 @@ function Navbar() {
                   {currentUser?.photoURL ? (
                     <Image
                       src={currentUser?.photoURL}
-                      className="rounded-full "
+                      className="rounded-full object-cover"
                       height={25}
                       width={25}
                       alt={""}
