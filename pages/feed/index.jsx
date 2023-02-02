@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
 import Card from "../../components/Card";
+import { useAuthContext } from "../../components/context/AuthContext";
 import Post from "../../components/Post";
+import { auth } from "../../fbConf";
 
 const posts = [
   {
@@ -27,6 +29,8 @@ const posts = [
 ];
 function Feed() {
   const [pre, setpre] = useState(false);
+  const { currentUser } = useAuthContext();
+
   function handlePost() {
     setpre(!pre);
   }
@@ -41,20 +45,22 @@ function Feed() {
       </h4>
       {/* new post */}
       <section className="relative ">
-        <button
-          className="bg-slate-800 text-white rounded-full p-2 px-4 flex items-center capitalize sticky top-0 left-1/2 -translate-x-1/2"
-          style={{
-            filter: `brightness(${pre ? 0.3 : 1})`,
-          }}
-          onClick={handlePost}
-          disabled={pre}
-        >
-          create Post{" "}
-          <MdAdd
-            enableBackground={true}
-            className="bg-blue-400 mx-2 rounded-full"
-          />
-        </button>
+        {currentUser && (
+          <button
+            className="bg-slate-800 text-white rounded-full p-2 px-4 flex items-center capitalize sticky top-0 left-1/2 -translate-x-1/2"
+            style={{
+              filter: `brightness(${pre ? 0.3 : 1})`,
+            }}
+            onClick={handlePost}
+            disabled={pre}
+          >
+            create Post{" "}
+            <MdAdd
+              enableBackground={true}
+              className="bg-blue-400 mx-2 rounded-full"
+            />
+          </button>
+        )}
         {pre && <Post togglePost={handlePost} />}
       </section>
       {/* posts */}

@@ -1,17 +1,22 @@
 import { useAuthContext } from "../components/context/AuthContext";
 import Link from "next/link";
-import { useRouter } from "next/router";
 //icons
 import { BiChat, BiNews } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 
 function Home() {
-  const route = useRouter();
   const IfNotUser = () => {
     return (
-      <>
-        <span className="font-bold px-1">Sign in </span> to start chat...
-      </>
+      <div className="grid">
+        <p>
+          <span className="font-bold px-1">Sign in </span> to start chat...
+        </p>
+        <Link href={"/feed"}>
+          <button className="bg-cyan-600 rounded-md px-5 py-2 font-bold transition-colors hover:bg-cyan-400 capitalize flex gap-1 items-center mx-auto mt-2">
+            Feed <BiNews />
+          </button>
+        </Link>
+      </div>
     );
   };
   const links = [

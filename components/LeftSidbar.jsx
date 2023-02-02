@@ -13,7 +13,7 @@ import { useAuthContext } from "./context/AuthContext";
 //icons
 import { BiMessageRoundedAdd } from "react-icons/bi";
 
-function LeftSidbar({ path, isUser, restClass }) {
+function LeftSidbar({ path, isUser }) {
   const [create, setCreate] = useState(false);
   const grpRef = collection(db, "groups");
   const { currentUser } = useAuthContext();
@@ -57,7 +57,7 @@ function LeftSidbar({ path, isUser, restClass }) {
       <div
         className={`flex flex-col gap-2 overflow-hidden h-full p-0 transition-all z-[100]  ${
           !create ? "w-20" : "w-[25ch] shadow-lg shadow-white"
-        } md:w-[45ch] ${restClass}`}
+        } md:w-[45ch] `}
       >
         {/* create new group */}
         <div

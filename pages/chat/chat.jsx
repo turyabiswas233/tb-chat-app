@@ -46,7 +46,7 @@ function Chat({ grpInfo }) {
         justify-center items-center
         "
         >
-          <Loading w={40} h={40} />
+          <Loading width={40} height={40} color={"#ff3333"} />
         </div>
       );
     }
@@ -313,7 +313,7 @@ function Chat({ grpInfo }) {
   if (user)
     return (
       <>
-        <div className="w-[calc(100%-80px)] md:w-full h-full absolute md:static flex flex-row p-0 right-0">
+        <div className="w-auto md:w-full h-full flex flex-1 flex-row p-0">
           {/* group info panel */}
           <section className="flex-auto flex flex-col w-auto max-w-2xl mx-auto">
             <GroupInfo grp={grpInfo} />
@@ -325,7 +325,7 @@ function Chat({ grpInfo }) {
               <div ref={bottomChat}></div>
             </div>
             {/* handle message send */}
-            <div className="flex bg-slate-900/50 justify-between overflow-hidden h-16 w-11/12 mx-auto rounded-2xl py-px">
+            <div className="flex bg-slate-900/50 justify-between overflow-hidden h-16 w-11/12 mx-auto rounded-2xl py-px relative bottom-2 mt-3">
               {/* part msg tool || input and submit*/}
               {/* message sent btn section */}
               <div
@@ -368,7 +368,10 @@ function Chat({ grpInfo }) {
               </div>
             </div>
           </section>
-          <RightSideBar showMe={showInfo} />
+          <RightSideBar
+            showMe={showInfo}
+            children={{ uid: id, name: grpInfo?.grpname }}
+          />
         </div>
       </>
     );

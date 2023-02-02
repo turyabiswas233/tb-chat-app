@@ -78,7 +78,7 @@ function Login() {
     } else {
       signInWithEmailAndPassword(auth, userCred.email, userCred.pass)
         .then((e) => {
-          uploadUserInfo(e.user);
+          router.push("/");
         })
         .catch((err) => {
           console.log("error to login");
@@ -95,9 +95,9 @@ function Login() {
   }
   if (!currentUser)
     return (
-      <div className="h-[calc(100%_-_50px)] md:bg-gradient-to-tr from-sky-700 to-activeTab/40 md:bg-opacity-10 w-full flex flex-col md:flex-row relative justify-center py-10 max-w-5xl m-auto rounded-xl">
-        <section className="text-center w-fit mx-auto my-auto">
-          <h3 className="text-3xl md:text-4xl font-bold tracking-wider">
+      <div className="h-[calc(100%_-_50px)] md:bg-gradient-to-tr from-owner_bg to-activeTab/40 md:bg-opacity-10 w-full flex flex-col md:flex-row relative justify-center py-10 max-w-5xl m-auto rounded-xl">
+        <section className="text-center w-fit mx-auto md:my-auto mb-4">
+          <h3 className="text-3xl md:text-4xl font-bold tracking-wider ">
             Sign in to <span className="text-activeRing">Trustenger</span>
           </h3>
         </section>
@@ -105,8 +105,7 @@ function Login() {
         <div className="h-full m-auto flex flex-col justify-center w-auto mx-auto flex-2">
           <section className="grid">
             <form
-              className="grid grid-cols-1 md:my-10
-              bg-activeTab/10 p-7 mt-2 rounded-lg"
+              className="grid grid-cols-1 p-7 rounded-lg bg-activeRing/30"
               onSubmit={empassSignIn}
             >
               <section
@@ -186,9 +185,11 @@ function Login() {
                   </h2>
                 )}
               <button
-                className=" font-bold rounded-full my-2 p-3 px-5 text-sm  bg-activeTab hover:bg-activeRing  transition-all text-black
+                className=" font-bold rounded-full my-2 p-3 px-5 text-sm  bg-activeTab hover:bg-activeRing  transition-all text-black disabled:cursor-not-allowed
+                disabled:bg-gray-900 disabled:text-opacity-70
                w-fit mx-auto flex gap-1 items-center"
                 type="submit"
+                disabled={!userCred.email || !userCred.pass}
               >
                 Login <CgLogIn />
               </button>

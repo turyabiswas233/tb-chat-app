@@ -120,8 +120,19 @@ function Signup() {
   }
 
   return (
-    <div className="h-fit m-auto grid justify-center">
-      <section className="grid">
+    <div
+      className="h-fit m-auto grid justify-center md:grid-cols-2
+    md:bg-gradient-to-tr from-friend_bg to-primary_bg_dark md:bg-opacity-10
+    p-3 rounded-lg max-w-screen-lg
+    "
+    >
+      <section className="text-center w-fit mx-auto md:my-auto mb-4">
+        <h3 className="text-3xl md:text-4xl font-bold tracking-wider ">
+          Create new account in{" "}
+          <span className="text-activeRing">Trustenger</span>
+        </h3>
+      </section>
+      <section className="grid max-w-md mx-auto">
         <form
           className="grid grid-cols-1 md:my-10
               bg-activeTab/10 p-7 mt-2 rounded-lg"
@@ -210,12 +221,12 @@ function Signup() {
             type="submit"
             disabled={load}
           >
-            {load ? <Loading w={10} h={10} /> : "sign up"}
+            {load ? <Loading w={10} h={10} color={"#23e2ff"} /> : "sign up"}
           </button>
         </form>
         <p
-          className="relative after:absolute after:h-px after:w-1/3 after:bg-activeTab after:right-0 after:top-1/2
-            before:absolute before:h-px before:w-1/3 before:bg-activeTab before:top-1/2 flex py-4"
+          className="relative after:absolute after:h-px after:w-2/5 after:bg-activeTab after:right-0 after:top-1/2
+            before:absolute before:h-px before:w-2/5 before:bg-activeTab before:top-1/2 flex py-4"
         >
           <span className="mx-auto w-fit">Or</span>
         </p>

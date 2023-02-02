@@ -1,92 +1,24 @@
 import styles from "./loader.module.css";
 
-function Loading({ w, h }) {
-  const style = [
-    {
-      transform: "rotate(calc(1*18deg))",
-    },
-    {
-      transform: "rotate(calc(2*18deg))",
-    },
-    {
-      transform: "rotate(calc(3*18deg))",
-    },
-    {
-      transform: "rotate(calc(4*18deg))",
-    },
-    {
-      transform: "rotate(calc(5*18deg))",
-    },
-    {
-      transform: "rotate(calc(6*18deg))",
-    },
-    {
-      transform: "rotate(calc(7*18deg))",
-    },
-    {
-      transform: "rotate(calc(8*18deg))",
-    },
-    {
-      transform: "rotate(calc(9*18deg))",
-    },
-    {
-      transform: "rotate(calc(10*18deg))",
-    },
-    {
-      transform: "rotate(calc(11*18deg))",
-    },
-    {
-      transform: "rotate(calc(12*18deg))",
-    },
-    {
-      transform: "rotate(calc(13*18deg))",
-    },
-    {
-      transform: "rotate(calc(14*18deg))",
-    },
-    {
-      transform: "rotate(calc(15*18deg))",
-    },
-    {
-      transform: "rotate(calc(16*18deg))",
-    },
-    {
-      transform: "rotate(calc(17*18deg))",
-    },
-    {
-      transform: "rotate(calc(18*18deg))",
-    },
-    {
-      transform: "rotate(calc(19*18deg))",
-    },
-    {
-      transform: "rotate(calc(20*18deg))",
-    },
-  ];
-  let min = w <= h ? w : h;
+function Loading({ width, height, color }) {
+  let min = width >= height ? width : height;
   return (
-    <div>
+    <div
+      className={styles.container}
+      style={{
+        width: `${min}px` || "40px",
+        height: `${min}px` || "40px",
+      }}
+    >
       <section
         className={styles.loader}
         style={{
-          width: w,
-          height: h,
+          border: `${min ? min / 10 : 4}px solid ${
+            color ? color + "22" : "#6acfcf"
+          }`,
+          borderTopColor: color ? color : "#6acfcf",
         }}
-      >
-        {style.map((child, id) => {
-          return (
-            <p key={id} style={child}>
-              <span
-                style={{
-                  animationDelay: `calc(${(id + 1) * 0.1}s)`,
-                  width: min && min / 2.5,
-                  height: min && min / 2.5,
-                }}
-              ></span>
-            </p>
-          );
-        })}
-      </section>
+      ></section>
     </div>
   );
 }

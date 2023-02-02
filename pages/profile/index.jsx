@@ -5,7 +5,7 @@ import { useAuthContext } from "../../components/context/AuthContext";
 import { storage, auth, db } from "../../fbConf";
 import { doc, updateDoc } from "firebase/firestore";
 import { updateProfile } from "firebase/auth";
-
+import Loading from "../../components/loading/loading";
 function Profile() {
   const { currentUser } = useAuthContext();
   const [userInfo, setuserInfo] = useState({
@@ -18,6 +18,7 @@ function Profile() {
   const [load, setload] = useState(false);
   const [success, setsuccess] = useState(false);
   const [fail, setfail] = useState(false);
+  const [error, seterror] = useState("");
 
   function getName(e) {
     setuserInfo((pre) => ({ ...pre, displayName: e.target.value }));
@@ -44,9 +45,10 @@ function Profile() {
           setprogress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
           console.log(progress);
         },
-        (error) => {
+        (err) => {
           // Handle unsuccessful uploads
-          console.log("error", error);
+          console.log("error", err);
+          seterror(err);
         },
         () => {
           //get photo url
@@ -63,40 +65,33 @@ function Profile() {
     const uid = auth.currentUser.uid;
     const dbref = doc(db, "users", uid);
     setload(true);
-    updateProfile(auth.currentUser, {
-      displayName: name ? name : auth.currentUser.displayName,
-      photoURL: link ? link : auth.currentUser.photoURL,
-    })
-      .then(() => {
+    try {
+      updateProfile(auth.currentUser, {
+        displayName: name ? name : auth.currentUser.displayName,
+        photoURL: link ? link : auth.currentUser.photoURL,
+      }).then(() => {
         setfail(false);
         updateDoc(dbref, {
           name: auth.currentUser.displayName,
           image: auth.currentUser.photoURL,
-        })
-          .then(() => {
-            // final action for update user
-            setload(false);
-            setsuccess(true);
-            setfail(false);
-            if (typeof window !== "undefined") {
-              window.location.reload();
-            }
-          })
-          .catch((err) => {
-            setsuccess(false);
-            setload(false);
-            setfail(true);
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        setsuccess(false);
-        setload(false);
-        setfail(true);
-        console.log(err);
+        }).then(() => {
+          // final action for update user
+          setload(false);
+          setsuccess(true);
+          setfail(false);
+          if (typeof window !== "undefined") {
+            window.location.reload();
+          }
+        });
       });
+    } catch (err) {
+      setsuccess(false);
+      setload(false);
+      setfail(true);
+      seterror(err);
+    }
   }
-
+  console.log("error: ", error);
   if (currentUser)
     return (
       <div className="flex flex-col m-auto h-fit">
@@ -141,7 +136,7 @@ function Profile() {
             )}
 
             <button
-              className="bg-owner_bg/50 rounded-md px-5 py-2 font-bold transition-colors hover:bg-owner_bg capitalize disabled:bg-gray-700 w-24 disabled:cursor-not-allowed cursor-pointer"
+              className="bg-owner_bg/50 rounded-md px-5 py-2 font-bold transition-colors hover:bg-owner_bg capitalize disabled:bg-gray-700 w-24 h-10 disabled:cursor-not-allowed cursor-pointer "
               type="submit"
               disabled={
                 userInfo.email !== currentUser?.email ||
@@ -149,7 +144,11 @@ function Profile() {
                 (!userInfo.photo && !userInfo.displayName)
               }
             >
-              {load ? "O" : "Update"}
+              {load ? (
+                <Loading width={16} height={16} color={"#eeffff"} />
+              ) : (
+                "Update"
+              )}
             </button>
 
             {/* progress bar */}
@@ -161,8 +160,10 @@ function Profile() {
                 }}
               ></span>
             </p>
+            {/* server status */}
             {success && <p className="text-emerald-400">update success!</p>}
             {fail && <p className="text-rose-600">try again!</p>}
+            {/* {error && <p className="text-rose-600">{error}</p>} */}
           </form>
 
           {/* profile user email */}

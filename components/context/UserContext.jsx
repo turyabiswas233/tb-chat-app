@@ -43,7 +43,7 @@ export const UserContext = ({ create }) => {
         justify-center items-center
         "
             >
-              <Loading />
+              <Loading width={20} height={20} color={"#224ecf"} />
             </div>
           </>
         )}

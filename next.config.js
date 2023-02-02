@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 // require dotenv module
 require("dotenv").config();
+require("cors");
 const nextConfig = {
   env: {
     API_KEY: process.env.NEXT_APP_API_KEY,
