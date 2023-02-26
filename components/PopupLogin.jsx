@@ -5,12 +5,13 @@ function PopupLogin({ show }) {
   const router = useRouter();
   const id = router.pathname;
   let isinaccount = id.includes("account");
-  const Button = ({ child }) => {
+  const Button = ({ child, route }) => {
     return (
       <button
         className="bg-white rounded-full p-2 px-4 hover:bg-black hover:text-red-50 text-black capitalize focus:outline-none
       focus:bg-black focus:text-red-50 hover:font-semibold h-fit
       "
+        onClick={() => router.push(`${route}`)}
       >
         {child}
       </button>
@@ -32,8 +33,8 @@ function PopupLogin({ show }) {
           </p>
         </div>
         <div className="flex gap-2 text-sm md:text-md">
-          <Button child={"Sign up"} />
-          <Button child={"Login"} />
+          <Button child={"Sign up"} route={"/account/signup"} />
+          <Button child={"Login"} route={"/account/login"} />
         </div>
       </div>
     );

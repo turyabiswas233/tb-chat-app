@@ -1,22 +1,28 @@
+import { useMemo, useContext } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+// components and custom modules
 import { auth } from "../fbConf";
 import { signOut } from "firebase/auth";
 import Image from "next/image";
-import Link from "next/link";
-import { useMemo, useContext } from "react";
 import { AuthContext } from "../components/context/AuthContext";
-import { FiLogIn, FiLogOut } from "react-icons/fi";
+import Theme from "./theme";
 //icons
 import { MdFace } from "react-icons/md";
+import { FiLogIn, FiLogOut } from "react-icons/fi";
 
-function Navbar() {
+function Navbar({ theme, toggle }) {
   const { currentUser } = useContext(AuthContext);
+  const router = useRouter();
   const memo = useMemo(() => {
     return (
       <>
         <li>
           <Link href={"/"}>
             <a
-              className="font-bold flex bg-friend_bg text-lime-100 px-4 p-2 rounded-full justify-center items-center w-fit gap-3 capitalize hover:text-green-500 transition-all"
+              className={`font-bold flex ${
+                theme ? "bg-owner_bg" : "bg-friend_bg"
+              } text-lime-100 px-4 p-2 rounded-full justify-center items-center w-fit gap-3 capitalize hover:bg-blue-700 transition-all`}
               title={currentUser ? currentUser?.displayName : "Home"}
             >
               {currentUser ? (
@@ -72,7 +78,7 @@ function Navbar() {
         </li>
       </>
     );
-  }, [currentUser]);
+  }, [currentUser, theme]);
   return (
     <div className="sticky top-0 z-50 shadow-md">
       <ul
@@ -82,6 +88,9 @@ function Navbar() {
        "
       >
         {memo}
+        <li>
+          <Theme dark={theme} changetheme={toggle} />
+        </li>
       </ul>
     </div>
   );
