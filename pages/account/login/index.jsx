@@ -15,7 +15,7 @@ import { CgLogIn } from "react-icons/cg";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 
-function Login() {
+function Login({ theme }) {
   const provider = new GoogleAuthProvider();
   const router = useRouter();
   const { currentUser } = useContext(AuthContext);
@@ -98,18 +98,27 @@ function Login() {
       <div className="h-[calc(100%_-_50px)] md:bg-gradient-to-tr from-owner_bg to-activeTab/40 md:bg-opacity-10 w-full flex flex-col md:flex-row relative justify-center py-10 max-w-5xl m-auto rounded-xl">
         <section className="text-center w-fit mx-auto md:my-auto mb-4">
           <h3 className="text-3xl md:text-4xl font-bold tracking-wider ">
-            Sign in to <span className="text-activeRing">Trustenger</span>
+            Sign in to{" "}
+            <span
+              className={` ${
+                !theme ? "text-inactivetxt" : "text-inactivetxt/70"
+              }`}
+            >
+              Trustenger
+            </span>
           </h3>
         </section>
 
         <div className="h-full m-auto flex flex-col justify-center w-auto mx-auto flex-2">
           <section className="grid">
             <form
-              className="grid grid-cols-1 p-7 rounded-lg bg-activeRing/30"
+              className={`grid grid-cols-1 p-7 rounded-lg  ${
+                !theme ? "bg-inactivetxt/30" : "bg-inactivetxt"
+              }`}
               onSubmit={empassSignIn}
             >
               <section
-                className={`bg-black text-white rounded-full p-4 ring-2 ${
+                className={`bg-black text-white rounded-md p-4 ring-2 ${
                   userCred.email == "" && error.type !== "empty"
                     ? "ring-0"
                     : userCred.email.includes("@")
@@ -139,7 +148,7 @@ function Login() {
                 />
               </section>
               <section
-                className={`bg-black text-white rounded-full p-4 ring-2 ${
+                className={`bg-black text-white rounded-md p-4 ring-2 ${
                   userCred.pass == "" && error.type !== "empty"
                     ? "ring-0"
                     : userCred.pass.length > 7
@@ -169,7 +178,7 @@ function Login() {
                   }}
                 />
                 <span onClick={togglePass} type="reset">
-                  {!showPass ? <AiFillEye /> : <AiFillEyeInvisible />}
+                  {showPass ? <AiFillEye /> : <AiFillEyeInvisible />}
                 </span>
               </section>
               {error.err1 !== "" &&
@@ -189,7 +198,9 @@ function Login() {
                 disabled:bg-gray-900 disabled:text-opacity-70
                w-fit mx-auto flex gap-1 items-center"
                 type="submit"
-                disabled={!userCred.email || !userCred.pass}
+                disabled={
+                  !userCred.email || !userCred.pass || userCred.pass.length < 8
+                }
               >
                 Login <CgLogIn />
               </button>
@@ -201,7 +212,7 @@ function Login() {
               <span className="mx-auto w-fit">Or</span>
             </p>
             <button
-              className=" font-bold tracking-wider rounded-full p-3 text-sm bg-slate-100/80 hover:bg-amber-50 text-friend_bg  hover:shadow-sm transition-all flex gap-2 items-center justify-center capitalize"
+              className={`font-bold tracking-wider rounded-full p-3 text-sm bg-zinc-100/80 text-friend_bg shadow-md transition-all flex gap-2 items-center justify-center capitalize hover:shadow-md hover:shadow-gray-600`}
               onClick={googleSignIn}
             >
               sign in with Google <FcGoogle />
@@ -211,7 +222,13 @@ function Login() {
             <h2 className="mx-auto w-fit text-xs my-1">
               Don't have account?{" "}
               <Link href={"/account/signup"}>
-                <span className="capitalize hover:underline text-white/60 hover:text-blue-400 cursor-pointer">
+                <span
+                  className={`capitalize hover:underline ${
+                    !theme
+                      ? "text-white hover:text-blue-400"
+                      : "text-slate-700 hover:text-blue-800"
+                  }  cursor-pointer`}
+                >
                   Sign up
                 </span>
               </Link>
