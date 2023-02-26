@@ -3,8 +3,7 @@ import Link from "next/link";
 //icons
 import { BiChat, BiNews } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
-
-function Home() {
+function Home({ theme }) {
   const IfNotUser = () => {
     return (
       <div className="grid">
@@ -26,7 +25,7 @@ function Home() {
   ];
   const IfUser = () => {
     return (
-      <div className="flex gap-3">
+      <div className="flex gap-3 justify-center">
         <ul className="grid gap-2 grid-cols-2 ">
           {links.map((link, id) => {
             return (
@@ -54,11 +53,16 @@ function Home() {
 
   return (
     <div
-      className="my-auto mx-auto relative h-full flex
-        justify-center items-center md:text-2xl text-lg w-2/3  text-center text-zinc-100 break-words
+      className="my-auto mx-auto relative h-fit space-y-6 md:text-2xl text-lg w-2/3  text-center text-zinc-100 break-words
         
         "
     >
+      <h2
+        className={`
+      ${theme ? "text-gray-800" : "text-gray-100"}`}
+      >
+        Welcome to the new Era of trustenger
+      </h2>
       {currentUser ? <IfUser /> : <IfNotUser />}
     </div>
   );

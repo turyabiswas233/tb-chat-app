@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useToggleTheme } from "../components/theme";
 import {
   AuthContextProvider,
   useAuthContext,
@@ -14,9 +15,10 @@ import { useEffect, useState } from "react";
 function MyApp({ Component, pageProps }) {
   const rout = useRouter();
   const path = rout.pathname;
+  const { currentUser } = useAuthContext();
   const isChatpanel = path.includes("chat");
   const [showPop, setShowPop] = useState(false);
-  const { currentUser } = useAuthContext();
+  const [theme, toggleTheme] = useToggleTheme();
   useEffect(() => {
     const loop = setTimeout(() => {
       setShowPop(true);
@@ -25,17 +27,23 @@ function MyApp({ Component, pageProps }) {
   });
   return (
     <AuthContextProvider>
-      <div className="relative h-screen overflow-none flex flex-col bg-primary_bg_dark text-msg_txt">
+      <div
+        className={`relative h-screen overflow-none flex flex-col ${
+          !theme
+            ? "bg-primary_bg_dark text-msg_txt"
+            : "bg-zinc-100 text-zinc-900"
+        }`}
+      >
         <Head>
           <title>Trustenger</title>
         </Head>
-        <Navbar />
+        <Navbar theme={theme} toggle={toggleTheme} />
 
         <CookieConfirm />
 
         <div className="flex overflow-auto relative w-full h-full bottom-0 pb-0">
           <LeftSidbar path={isChatpanel} isUser={user} />
-          <Component {...pageProps} />
+          <Component {...pageProps} theme={theme} />
         </div>
         {!currentUser && <PopupLogin show={showPop} />}
       </div>
