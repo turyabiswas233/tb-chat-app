@@ -6,7 +6,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
@@ -16,16 +16,18 @@ import { auth, db } from "../../../fbConf";
 import Loading from "../../../components/loading/loading";
 import { doc, setDoc } from "firebase/firestore";
 
-function Signup() {
+function Signup({ theme }) {
   const [showPass, setshowPass] = useState(false);
   const provider = new GoogleAuthProvider();
   const router = useRouter();
   const [userCred, setUserCred] = useState({
     email: "",
     pass: "",
+    pw1: "",
+    pw2: "",
     name: "",
-    photo: null,
   });
+
   const [error, seterror] = useState({
     err1: "",
     err2: "",
@@ -110,19 +112,33 @@ function Signup() {
     setUserCred((pre) => ({ ...pre, email: event.target.value }));
   }
   function pass(event) {
-    setUserCred((pre) => ({ ...pre, pass: event.target.value }));
+    setUserCred((pre) => ({ ...pre, pass: event }));
+  }
+  function pw1(event) {
+    setUserCred((pre) => ({ ...pre, pw1: event.target.value }));
+  }
+  function pw2(event) {
+    setUserCred((pre) => ({ ...pre, pw2: event.target.value }));
   }
   function name(event) {
     setUserCred((pre) => ({ ...pre, name: event.target.value }));
   }
-  function photo(event) {
-    setUserCred((pre) => ({ ...pre, photo: event.target.files[0] }));
-  }
-
+  const spsym = specialSym(userCred.pw1);
+  const cappass = capitalChar(userCred.pw1);
+  const smpass = smallChar(userCred.pw1);
+  const numpass = number(userCred.pw1);
+  const passStr =
+    spsym && cappass && smpass && numpass && userCred.pw1.length > 7;
+  const [confirmPassword, setConfirmPassword] = useState(false);
+  useEffect(() => {
+    setConfirmPassword(userCred.pw1 == userCred.pw2 && userCred.pw1.length > 7);
+    if (confirmPassword) {
+      pass(userCred.pw1);
+    }
+  }, [userCred.pw1, userCred.pw2]);
   return (
     <div
-      className="h-fit m-auto grid justify-center md:grid-cols-2
-    md:bg-gradient-to-tr from-friend_bg to-primary_bg_dark md:bg-opacity-10
+      className="h-fit m-auto grid justify-center md:grid-cols-2 
     p-3 rounded-lg max-w-screen-lg
     "
     >
@@ -134,14 +150,17 @@ function Signup() {
       </section>
       <section className="grid max-w-md mx-auto">
         <form
-          className="grid grid-cols-1 md:my-10
-              bg-activeTab/10 p-7 mt-2 rounded-lg"
+          className={`grid grid-cols-1 md:my-10
+              ${
+                !theme ? "bg-inactivetxt/30" : "bg-inactivetxt"
+              } p-7 mt-2 rounded-lg`}
           onSubmit={(e) => {
             e.preventDefault();
             if (
               userCred.name == "" ||
               userCred.email == "" ||
-              userCred.pass == ""
+              userCred.pass == "" ||
+              !confirmPassword
             ) {
               seterror((pre) => ({ ...pre, type: "empty" }));
             } else {
@@ -150,7 +169,7 @@ function Signup() {
           }}
         >
           <section
-            className={`bg-black text-white rounded-full p-4 ring-2 ${
+            className={`bg-black/50 text-white rounded-md p-4 ring-2 ${
               error.type !== "empty" && userCred.name == ""
                 ? "ring-0"
                 : error.type == "empty"
@@ -164,7 +183,7 @@ function Signup() {
             <Input type={"text"} placeholder={"Name"} getValue={name} />
           </section>
           <section
-            className={`bg-black text-white rounded-full p-4 ring-2 ${
+            className={`bg-black/50 text-white rounded-md p-4 ring-2 ${
               error.type !== "empty" && userCred.email == ""
                 ? "ring-0"
                 : error.type == "empty" || !userCred.email?.includes("@")
@@ -182,11 +201,12 @@ function Signup() {
               type={"email"}
             />
           </section>
+          {/* new password */}
           <section
-            className={`bg-black text-white rounded-full p-4 ring-2 ${
-              userCred.pass == "" && error.type !== "empty"
+            className={`bg-black/50 text-white rounded-md p-4 ring-2 ${
+              userCred.pw1 == "" && error.type !== "empty"
                 ? "ring-0"
-                : userCred.pass.length > 7
+                : passStr
                 ? "ring-cyan-500"
                 : "ring-rose-500"
             } shadow-[0_0_15px_-10px] my-2 shadow-rose-100 flex gap-2 transition-all items-center border border-msg_txt/50 relative`}
@@ -196,13 +216,37 @@ function Signup() {
             </label>
             <Input
               type={"password"}
-              placeholder={"password"}
+              placeholder={"new password"}
               showPass={showPass}
-              getValue={pass}
+              getValue={pw1}
               require={true}
             />
             <span onClick={togglePass} type="reset">
-              {!showPass ? <AiFillEye /> : <AiFillEyeInvisible />}
+              {showPass ? <AiFillEye /> : <AiFillEyeInvisible />}
+            </span>
+          </section>
+          {/* confirm password */}
+          <section
+            className={`bg-black/50 text-white rounded-md p-4 ring-2 ${
+              userCred.pw2 == "" && error.type !== "empty"
+                ? "ring-0"
+                : confirmPassword && passStr
+                ? "ring-cyan-500"
+                : "ring-rose-500"
+            } shadow-[0_0_15px_-10px] my-2 shadow-rose-100 flex gap-2 transition-all items-center border border-msg_txt/50 relative`}
+          >
+            <label htmlFor="password">
+              <MdLock color="#a2affc" />
+            </label>
+            <Input
+              type={"password"}
+              placeholder={"confirm password"}
+              showPass={showPass}
+              getValue={pw2}
+              require={true}
+            />
+            <span onClick={togglePass} type="reset">
+              {showPass ? <AiFillEye /> : <AiFillEyeInvisible />}
             </span>
           </section>
 
@@ -216,14 +260,57 @@ function Signup() {
             </h2>
           )}
           <button
-            className=" font-bold rounded-full mt-4 py-3 px-5 text-sm  bg-activeTab hover:bg-activeRing  transition-all text-black
-               w-fit mx-auto flex gap-1 items-center"
+            className={`font-bold rounded-full mt-4 py-3 px-5 text-sm  bg-activeTab hover:bg-activeRing  transition-all text-black
+               w-fit mx-auto flex gap-1 items-center
+               disabled:bg-slate-600 disabled:text-opacity-60
+               `}
             type="submit"
-            disabled={load}
+            disabled={
+              load || !userCred.email || !userCred.name || !userCred.pass
+            }
           >
             {load ? <Loading w={10} h={10} color={"#23e2ff"} /> : "sign up"}
           </button>
         </form>
+        <div className="text-xs font-bold capitalize">
+          <span className="text-green-700 underline underline-offset-2 ">
+            password hint:
+          </span>
+          <ul className={`list-disc px-5`}>
+            <li
+              className={`${
+                cappass && smpass ? "text-green-600" : "text-rose-600"
+              }`}
+            >
+              {" "}
+              use characters: [A-Z] and [a-z]
+            </li>
+            <li className={`${spsym ? "text-green-600" : "text-rose-600"}`}>
+              {" "}
+              use special characters: {"!@#$%^&*)("}
+            </li>
+            <li className={`${numpass ? "text-green-600" : "text-rose-600"}`}>
+              {" "}
+              use numbers: 0 to 9
+            </li>
+            <li
+              className={`${
+                userCred.pw1.length >= 8 ? "text-green-600" : "text-rose-600"
+              }`}
+            >
+              must be greater than or equal to 8 character
+            </li>
+            <li
+              className={`${
+                confirmPassword ? "text-green-600" : "text-rose-600"
+              }`}
+            >
+              match password
+            </li>
+          </ul>
+        </div>
+
+        {/* or create account using gmail */}
         <p
           className="relative after:absolute after:h-px after:w-2/5 after:bg-activeTab after:right-0 after:top-1/2
             before:absolute before:h-px before:w-2/5 before:bg-activeTab before:top-1/2 flex py-4"
@@ -231,7 +318,9 @@ function Signup() {
           <span className="mx-auto w-fit">Or</span>
         </p>
         <button
-          className=" font-bold tracking-wider rounded-full p-3 text-sm bg-slate-100/80 hover:bg-amber-50 text-friend_bg  hover:shadow-sm transition-all flex gap-2 items-center justify-center capitalize"
+          className={`font-bold tracking-wider rounded-full p-3 text-sm transition-all flex gap-2 items-center justify-center capitalize shadow-sm shadow-slate-700 hover:brightness-105 ${
+            theme ? "bg-zinc-100" : "bg-zinc-800 "
+          }`}
           onClick={googleSignIn}
         >
           sign up with Google <FcGoogle />
@@ -240,5 +329,16 @@ function Signup() {
     </div>
   );
 }
-
+function specialSym(str) {
+  return str.match(/[`~!@#$%^&*()]/);
+}
+function capitalChar(str) {
+  return str.match(/[A-Z]/);
+}
+function smallChar(str) {
+  return str.match(/[a-z]/);
+}
+function number(str) {
+  return str.match(/[0-9]/);
+}
 export default Signup;
