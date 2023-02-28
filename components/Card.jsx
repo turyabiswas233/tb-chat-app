@@ -1,10 +1,6 @@
-import React, { useReducer, useState } from "react";
-import {
-  BiLike,
-  BiComment,
-  BiSend,
-  BiDotsHorizontalRounded,
-} from "react-icons/bi";
+import React, { useState } from "react";
+import { BiComment, BiSend, BiDotsHorizontalRounded } from "react-icons/bi";
+import { AiFillLike } from "react-icons/ai";
 import { MdReport } from "react-icons/md";
 const emojis = {
   like: "👍",
@@ -26,11 +22,11 @@ const Menu = () => {
   return (
     <>
       <div
-        className="p-2 absolute rounded-md bg-owner_bg/75 w-32 h-fit
+        className="p-2 absolute rounded-md bg-owner_bg w-32 h-fit
          right-0 top-10"
       >
         <ul className="capitalize text-sm">
-          <li className="flex items-center gap-1 cursor-pointer hover:bg-primary_bg_dark p-1 rounded-md">
+          <li className="flex items-center gap-1 cursor-pointer hover:bg-primary_bg_dark hover:text-gray-300 p-1 rounded-md">
             <MdReport /> report
           </li>
         </ul>
@@ -45,6 +41,7 @@ export default function Card({
   likes,
   uid,
   bright,
+  theme,
 }) {
   const [shComment, setshComment] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -61,9 +58,10 @@ export default function Card({
   }
   return (
     <div
-      className="rounded-lg p-4 transition-all ring-2 my-4"
+      className="rounded-lg p-4 ring-2 my-4"
       style={{
         filter: `brightness(${bright})`,
+        color: theme ? "black" : "whitesmoke",
       }}
     >
       <section className="capitalize flex justify-between ">
@@ -97,20 +95,55 @@ export default function Card({
         {/* blog */}
         {blog}
         <br />
-        <div className="relative left-1/2 -translate-x-1/2 w-[400px] h-[200px] p-3 bg-rose-600 rounded-md"></div>
+        <div className="relative left-1/2 -translate-x-1/2 w-[400px] max-w-full h-[200px] p-3 bg-rose-600 rounded-md"></div>
       </section>
       {/* actions */}
       <section className="flex items-center gap-3 my-3">
         <button
-          className={`flex items-center gap-1 hover:bg-owner_bg hover:text-white p-2 rounded-md transition-colors duration-[400ms] relative ${
-            like && "bg-owner_bg/60 text-white"
-          }`}
+          className={`flex items-center gap-1 md:hover:ring-1 p-2 rounded-md transition-colors duration-[400ms] relative`}
           onClick={toggleLike}
         >
-          <BiLike /> Like {likes}
-          {/* {state !== null ? state?.emoji : <BiLike />}
-          {state !== null ? state?.title : `Like ${likes || ""}`} */}
-          {/* {shEmoji && (
+          <AiFillLike fill={like ? "#2cc" : !theme ? "#fff" : "#111"} /> Like{" "}
+          {likes}
+          {/* multiple react- see end of the CARD */}
+        </button>
+
+        <button
+          className="flex items-center gap-1 hover:bg-slate-900 hover:text-white p-2 rounded-md transition-colors duration-[400ms]"
+          onClick={toggleCmnt}
+        >
+          <BiComment />
+          Comment
+        </button>
+      </section>
+      {shComment && (
+        <section
+          className={`flex items-center gap-3 ring-2  w-full p-2 rounded-lg mr-auto bg-slate-300/20
+          ${theme ? "ring-slate-800/40" : "ring-white/40"}
+          `}
+        >
+          <input
+            className="bg-transparent focus:border-none focus:outline-none  m-1 flex-1"
+            type="text"
+            name=""
+            placeholder="comment..."
+            id=""
+          />
+          <button className="hover:bg-slate-800 bg-slate-900 text-white p-2 rounded-lg transition-colors ">
+            <BiSend />
+          </button>
+        </section>
+      )}
+    </div>
+  );
+}
+
+{
+  /* {state !== null ? state?.emoji : <BiLike />}
+          {state !== null ? state?.title : `Like ${likes || ""}`} */
+}
+{
+  /* {shEmoji && (
             <ul className=" flex  absolute bottom-[calc(100%+5px)] left-1/2 bg-owner_bg/75 rounded-full p-2">
               {emojiArr.map((emoji, id) => {
                 return (
@@ -136,31 +169,5 @@ export default function Card({
                 );
               })}
             </ul>
-          )} */}
-        </button>
-
-        <button
-          className="flex items-center gap-1 hover:bg-slate-900 hover:text-white p-2 rounded-md transition-colors duration-[400ms]"
-          onClick={toggleCmnt}
-        >
-          <BiComment />
-          Comment
-        </button>
-      </section>
-      {shComment && (
-        <section className="flex items-center gap-3 ring-2 ring-white/50 w-2/3 p-2 rounded-lg ml-auto bg-slate-300/20">
-          <input
-            className="bg-transparent focus:border-none focus:outline-none  m-1 flex-1"
-            type="text"
-            name=""
-            placeholder="comment..."
-            id=""
-          />
-          <button className="hover:bg-slate-800 bg-slate-900 text-white p-2 rounded-lg transition-colors ">
-            <BiSend />
-          </button>
-        </section>
-      )}
-    </div>
-  );
+          )} */
 }
