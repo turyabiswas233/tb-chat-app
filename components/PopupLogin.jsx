@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
+// import react-icons
+import {AiOutlineCloseCircle} from 'react-icons/ai'
 
 function PopupLogin({ show }) {
   const router = useRouter();
   const id = router.pathname;
   let isinaccount = id.includes("account");
+  const [hardHide,setHardHide] = useState(false)
+  function handleHardHide () {
+    setHardHide(true);
+  }
+
   const Button = ({ child, route }) => {
     return (
       <button
@@ -17,11 +24,10 @@ function PopupLogin({ show }) {
       </button>
     );
   };
-  if (!isinaccount)
+  if (!isinaccount && !hardHide)
     return (
       <div
-        className={`bg-owner_bg w-full p-2 flex flex-col md:flex-row text-white h-40
-    items-center justify-evenly ${
+        className={`bg-owner_bg w-full p-2 flex flex-col md:flex-row text-white h-40 relative items-center justify-evenly ${
       show ? "opacity-100" : "opacity-0 "
     } transition-opacity duration-500`}
       >
@@ -36,6 +42,9 @@ function PopupLogin({ show }) {
           <Button child={"Sign up"} route={"/account/signup"} />
           <Button child={"Login"} route={"/account/login"} />
         </div>
+        <span className="absolute right-5 top-5 hover:text-green-500 text-lg transition-colors " onClick={handleHardHide}>
+          <AiOutlineCloseCircle enableBackground={true} />
+        </span>
       </div>
     );
 }
