@@ -112,9 +112,7 @@ function Login({ theme }) {
         <div className="h-full m-auto flex flex-col justify-center w-auto mx-auto flex-2">
           <section className="grid">
             <form
-              className={`grid grid-cols-1 p-7 rounded-lg  ${
-                !theme ? "bg-inactivetxt/30" : "bg-inactivetxt"
-              }`}
+              className={`grid grid-cols-1 p-7 rounded-lg  bg-inactivetxt/30 `}
               onSubmit={empassSignIn}
             >
               <section
@@ -186,7 +184,7 @@ function Login({ theme }) {
                 error.type !== "empty" && (
                   <h2
                     className={` 
-                grid text-red-600 text-xs px-4
+                grid text-pink-600 text-sm px-4 font-bold
                 `}
                   >
                     <span>{error.err1}</span>
