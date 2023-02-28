@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const CookieConfirm = () => {
+const CookieConfirm = ({ theme }) => {
   const [mount, setmount] = useState(false);
   const [show, setshow] = useState(false);
 
@@ -43,7 +43,7 @@ const CookieConfirm = () => {
   if (mount)
     return (
       <div
-        className={`min-w-fit bg-yellow-300 rounded-lg p-4 space-y-4 text-slate-600 font-bold fixed bottom-5 left-0 transition-all z-50 mx-auto scale-75 ${
+        className={`w-[340px] bg-cyan-700 text-slate-200 rounded-lg p-4 space-y-4  font-bold fixed bottom-5 left-0 transition-all z-50 mx-auto scale-75 ${
           show ? "opacity-100" : "opacity-0 bottom-0"
         }`}
       >
@@ -52,10 +52,10 @@ const CookieConfirm = () => {
           website.
         </p>
         <button
-          className="bg-yellow-200 rounded-md text-center px-3 py-2 focus:text-white focus:bg-owner_bg cursor-pointer"
+          className="bg-cyan-200 rounded-md text-center px-3 py-2 text-zinc-600 focus:bg-owner_bg cursor-pointer"
           onClick={() => setshow(false)}
         >
-          Accept
+          Ok
         </button>
       </div>
     );
