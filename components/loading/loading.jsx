@@ -1,6 +1,6 @@
 import styles from "./loader.module.css";
 
-function Loading({ width, height, color }) {
+function Loading({ width, height,stroke,  color }) {
   let min = width >= height ? width : height;
   return (
     <div
@@ -13,8 +13,8 @@ function Loading({ width, height, color }) {
       <section
         className={styles.loader}
         style={{
-          border: `${min ? min / 10 : 4}px solid ${
-            color ? color + "22" : "#6acfcf"
+          border: `${stroke? stroke / 10 : 4}px solid ${
+            color ? color + "22" : "#6acfcf22"
           }`,
           borderTopColor: color ? color : "#6acfcf",
         }}

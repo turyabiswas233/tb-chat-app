@@ -53,3 +53,12 @@ p::selection {
 ::-webkit-scrollbar {
   width: 0;
 }
+
+.inputTextArea::-webkit-scrollbar{
+  width: 5px;
+}
+.inputTextArea::-webkit-scrollbar-thumb{
+  width: 100%;
+  background-color: #acf6;
+  border-radius: 100px;
+}

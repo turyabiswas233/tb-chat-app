@@ -26,6 +26,7 @@ function Chat({ grpInfo }) {
   const chatRef = collection(db, `groups/${id}/messages`);
 
   const [snapshot, load, error] = useCollection(chatRef);
+  const [loading,setLoading] = useState(false)
   const chatsRef = useRef([]);
   let preDate =
     chatsRef.current?.values &&
@@ -100,7 +101,7 @@ function Chat({ grpInfo }) {
   async function sendMsg(txt) {
     const date = new Date();
     const data = {
-      text: `${txt}`,
+      text: txt,
       time: date?.getTime(),
       image: user?.photoURL,
       senderUID: user?.uid,
@@ -296,13 +297,17 @@ function Chat({ grpInfo }) {
       alert("Please login to send message to your group");
     } else if (txt == "") setNoText(true);
     else
-      sendMsg(txt)
+      {
+        setLoading(true)
+        sendMsg(txt)
         .then(() => {
           settxt("");
+          setLoading(false)
+          setNoText(false) 
         })
         .catch((err) => {
           console.log(err);
-        });
+        });}
   }
 
   useEffect(() => {
@@ -325,23 +330,26 @@ function Chat({ grpInfo }) {
               <div ref={bottomChat}></div>
             </div>
             {/* handle message send */}
-            <div className="flex bg-slate-900/50 justify-between overflow-hidden h-16 w-11/12 mx-auto rounded-2xl py-px relative bottom-2 mt-3">
+            <div className="flex bg-slate-900/50 justify-between items-center overflow-hidden h-12 min-h-max w-11/12 mx-auto rounded-2xl p-2 relative bottom-2 mt-3">
               {/* part msg tool || input and submit*/}
               {/* message sent btn section */}
               <div
-                className={`flex items-center rounded-2xl justify-between w-full min-h-fit text-sm p-1 ${
+                className={`flex items-center rounded-2xl justify-between w-full h-10 p-1 text-sm ${
                   noText ? "ring-1 ring-rose-600 ring-inset" : ""
                 }`}
               >
                 <button
                   type="reset"
-                  className="hover:bg-primary_bg_dark px-3 rounded-lg font-bold transition-all w-12 flex "
+                  className="hover:bg-primary_bg_dark px-3 rounded-lg font-bold transition-all w-12 h-full flex "
+                  onClick={() => alert("It is disabled now")} 
                 >
                   {Attach}
                 </button>
-                <input
-                  className={`bg-transparent w-auto md:w-full min-w-xs mx-2 rounded-md resize-none outline-none border-none flex-1 text-amber-50 p-2 overflow-y-auto break-words placeholder:text-zinc-700 h-16 `}
+                <textarea
+                  className={`inputTextArea bg-transparent w-auto md:w-full min-w-xs mx-2 rounded-md resize-none outline-none border-none flex-1 text-amber-50 p-2 overflow-y-auto break-words placeholder:text-zinc-700 h-10 `}
                   ref={text}
+                  name="text"
+                  autoFocus={true}
                   type="text"
                   required
                   value={txt}
@@ -350,27 +358,28 @@ function Chat({ grpInfo }) {
                     settxt(e.target.value);
                     setNoText(false);
                   }}
+                  disabled={loading}
                   onKeyDown={(e) => {
-                    if (e.key == "Enter" && txt !== "") {
+                    if (!e.shiftKey && e.key == "Enter" && txt !== "") {
                       handleSubmit();
-                    } else if (e.key == "Enter" && txt == "") {
+                    } else if (!e.shiftKey && e.key == "Enter" && txt == "") {
                       setNoText(true);
                     }
                   }}
-                />
+                ></textarea>
 
                 <button
-                  className="hover:bg-primary_bg_dark px-3 rounded-lg font-bold transition-all w-12 flex "
+                  className="hover:bg-primary_bg_dark px-3 rounded-lg font-bold transition-all w-12 h-full flex "
                   onClick={handleSubmit}
                 >
-                  {Send}
+                  {loading ? <Loading stroke={20} width={20} height={20}/>:Send}
                 </button>
               </div>
             </div>
           </section>
           <RightSideBar
             showMe={showInfo}
-            children={{ uid: id, name: grpInfo?.grpname }}
+            children={{ uid: id, name: grpInfo?.grpname,creator: grpInfo?.adminName,creatorEmail: grpInfo?.admin }} 
           />
         </div>
       </>

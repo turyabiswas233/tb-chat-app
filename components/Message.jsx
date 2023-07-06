@@ -4,7 +4,7 @@ function Message({ uid, sender, img, text, time, showTime }) {
   // timeing function
   let now = new Date();
   let date = new Date(time);
-  let today = new Date().getDate();
+  let today = now.getTime();
   let hr = date?.getHours();
   let min = date?.getMinutes();
   const days = [
@@ -29,8 +29,7 @@ function Message({ uid, sender, img, text, time, showTime }) {
     "oct",
     "nov",
     "dec",
-  ];
-
+  ]; 
   // time
   let initialDate = {
     dd: date?.getDate(),
@@ -43,10 +42,10 @@ function Message({ uid, sender, img, text, time, showTime }) {
       a_p: hr >= 12 ? "pm" : "am",
     },
   };
-  let defer = today - initialDate.dd;
-  let show_date_in_24hour = defer < 1;
-  let yesterday = 1 <= defer && defer < 2;
-  let show_date_in_7days = 2 <= defer && defer < 7;
+  let defer = today - date.getTime();
+  let show_date_in_24hour = defer < 86400000;
+  let yesterday = 86400000 <= defer && defer < 2*86400000;
+  let show_date_in_7days = 2*86400000 <= defer && defer < 7*86400000;
   let in1_5min = now - time < 1.5 * 60 * 1000;
   //final time
   let finalTime = `${initialDate.dd} ${initialDate.mm} ${
@@ -124,7 +123,7 @@ function Message({ uid, sender, img, text, time, showTime }) {
                             `Visit ${txt}`
                           }
                         >
-                          [Link - {lnid}]
+                          {txt}
                         </a>{" "}
                       </>
                     );
@@ -164,8 +163,8 @@ function Message({ uid, sender, img, text, time, showTime }) {
           // user left side (friends)
 
           <div className="self-start flex flex-row-reverse items-center relative msg-class ">
-            <p
-              className={`p-2 rounded-2xl bg-friend_bg w-fit h-fit my-px max-w-[40vw]  text-sm ${
+            <pre
+              className={`p-2 rounded-2xl bg-friend_bg text-slate-100 w-fit h-fit my-px max-w-[40vw]  text-sm ${
                 img && "rounded-bl-none"
               } ml-7 shadow-xl shadow-slate-900/10 ${
                 isSexual &&
@@ -212,7 +211,7 @@ function Message({ uid, sender, img, text, time, showTime }) {
                   ? "Just Now"
                   : `${initialDate.time.h}:${initialDate.time.m} ${initialDate.time.a_p}`}
               </span>
-            </p>
+            </pre>
             {img && (
               <div className="absolute bottom-1 left-0 h-fit ">
                 <Image

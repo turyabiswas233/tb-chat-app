@@ -105,15 +105,3 @@ function LeftSidbar({ path, isUser }) {
 
 export default LeftSidbar;
 
-{
-  // add selected user to your group
-  async function addUsertoGrp() {
-    if (selectedUser?.length >= 1) {
-      const db = doc(grpRef, id);
-      await updateDoc(db, { user: arrayUnion(...selectedUser) }).then(() => {
-        alert("Adding Members Successful");
-        setshowUser(false);
-      });
-    } else alert("please select at least 2 User to Add into the group");
-  }
-}
